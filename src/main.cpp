@@ -10,7 +10,7 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 pros::MotorGroup leftMotors({18, -19, 20}, pros::MotorGearset::green); // left motor group - ports 18, 19 (reversed), 20
 pros::MotorGroup rightMotors({-11, 12, 13}, pros::MotorGearset::green); // right motor group - ports 11 (reversed), 12, 13
 
-// Inertial Sensor on port 10
+// Inertial Sensor on port 1
 pros::Imu imu(1);
 
 // Motors
@@ -32,18 +32,18 @@ pros::adi::Pneumatics matchLoad('H', false);
 
 // tracking wheels
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
-// pros::Rotation horizontalEnc(20);
+pros::Rotation horizontal_rotation(2);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation vertical_rotation(-11);
-// horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
-// lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_2, -5.75);
-// vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical(&vertical_rotation, lemlib::Omniwheel::NEW_2, 0);
+pros::Rotation vertical_rotation(-3);
+// horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
+lemlib::TrackingWheel horizontal(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.75);
+// vertical tracking wheel. 2" diameter, 0.37" offset, left of the robot (negative)
+lemlib::TrackingWheel vertical(&vertical_rotation, lemlib::Omniwheel::NEW_2, -0.37);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              10, // 10 inch track width
+                              12.44, // 12.44 inch track width
                               lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
                               360, // drivetrain rpm is 360
                               2 // horizontal drift is 2. If we had traction wheels, it would have been 8
@@ -74,7 +74,11 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
 );
 
 // sensors for odometry
-lemlib::OdomSensors sensors(&vertical, // vertical tracking wheel
+// Tracking center: (8,8.25)
+// Vertical Tracking Wheel Offset: 8-7.63 = 0.37 left of the tracking center (-0.37)
+
+
+lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel
                             nullptr, // vertical tracking wheel 2, set to nullptr as we don't have a second one
                             nullptr, // horizontal tracking wheel
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
@@ -138,7 +142,7 @@ void competition_initialize() {}
 
 // get a path used for pure pursuit
 // this needs to be put outside a function
-// ASSET(example_txt); // '.' replaced with "_" to make c++ happy
+ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 
 /**
  * Runs during autonomous
