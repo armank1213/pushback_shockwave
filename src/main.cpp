@@ -14,12 +14,14 @@ pros::MotorGroup rightMotors({-11, 12, 13}, pros::MotorGearset::green); // right
 pros::Imu imu(1);
 
 // Motors
-pros::Motor intakeMotor(17, pros::v5::MotorGears::green); // intake motor on port 17
-pros::Motor outtakeMotor(6, pros::v5::MotorGears::green); // outtake motor on port 6
-pros::Motor sortMotor(9, pros::v5::MotorGears::green); // sorting motor on port 9
+pros::Motor intakeMotor(9, pros::v5::MotorGears::green); // intake motor on port 9
+pros::Motor conveyorMotor(6, pros::v5::MotorGears::green); // conveyor motor on port 6
+pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
+pros::Motor outtakeMotor(14, pros::v5::MotorGears::green); // outtake motor on port 14
+pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
 
 // intake and outtake motor group
-pros::MotorGroup in_outGroup({17, 6}); 
+pros::MotorGroup in_outGroup({9, 6}); 
 
 // Vision & Signatures
 // vision sensor signature IDs
@@ -27,6 +29,8 @@ pros::Vision visionSensor(8);
 pros::vision_signature_s_t BLUE_SIG  = pros::Vision::signature_from_utility(1, -4089, -2329, -3210, 2711, 4961, 3836, 2.100, 0);
 pros::vision_signature_s_t RED_SIG  = pros::Vision::signature_from_utility(2, 4861, 11873, 8368, -1889, -225, -1058, 1.300, 0);
 
+// Optical Sensor
+pros::Optical light_source(10);
 // Pneumatics
 pros::adi::Pneumatics matchLoad('H', false);
 
@@ -180,6 +184,8 @@ void opcontrol() {
 
         // manual_sort();
 
+        light_source.set_led_pwm(100); // set the light source to maximum brightness
+
         colorSort();
 
         // Pneumatics Toggle
@@ -207,16 +213,28 @@ void sort(int sortPower) {
 	sortMotor.move(sortPower);
 }
 
+
+// Middle Take Motor Function
+void middleTake(int middletakePower) {
+    middletakeMotor.move(middletakePower);
+}
+
 // Manual Intake/Outtake
 void manual_in_out() {
 	if (controller.get_digital(DIGITAL_R1)) {
 		in_out(127);
+        outtakeMotor.move(127);
+        middleTake(-127);
 	}
 	else if (controller.get_digital(DIGITAL_R2)) {
       in_out(-127);
+      outtakeMotor.move(-127);
+      middleTake(127);
     }
 	else {
       in_out(0);
+      outtakeMotor.move(0);
+      middleTake(0);
     }
 }
 
@@ -237,7 +255,7 @@ void manual_sort() {
 void colorSort() {
    pros::vision_object_s_t block = visionSensor.get_by_size(0);
 
-    if (block.signature == RED_SIG.id && block.width > 100 && block.height > 95) {
+    if (block.signature == RED_SIG.id && block.width > 100) {
         sort(127);
         pros::delay(200);
     }
