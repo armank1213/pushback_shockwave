@@ -38,7 +38,7 @@ pros::adi::Pneumatics matchLoad('H', false);
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
 pros::Rotation horizontal_rotation(2);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation vertical_rotation(-3);
+pros::Rotation vertical_rotation(5);
 // horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
 lemlib::TrackingWheel horizontal(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.75);
 // vertical tracking wheel. 2" diameter, 0.37" offset, left of the robot (negative)
@@ -80,11 +80,12 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
 // sensors for odometry
 // Tracking center: (8,8.25)
 // Vertical Tracking Wheel Offset: 8-7.63 = 0.37 left of the tracking center (-0.37)
+// Horizontal Tracking Wheel Offset: 
 
 
-lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel
+lemlib::OdomSensors sensors(&vertical, // vertical tracking wheel
                             nullptr, // vertical tracking wheel 2, set to nullptr as we don't have a second one
-                            nullptr, // horizontal tracking wheel
+                            &horizontal, // horizontal tracking wheel
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
@@ -125,9 +126,14 @@ void initialize() {
 
     pros::Task screen_task([&]() {
         while (true) {
+            // Set Pose to (0,0,0) for PID Tuning
+            // chassis.setPose(0, 0, 0);
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+
+            pros::lcd::print(3, "Rotation Sensor: %i", vertical_rotation.get_position());
+
             // delay to save resources
             pros::delay(20);
         }
@@ -154,8 +160,10 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 void autonomous() {
 
     // Angular PID Tuning
-    chassis.setPose(0, 0, 0);
-    chassis.turnToHeading(90, 100000);
+    //chassis.setPose(0, 0, 0);
+    //chassis.turnToHeading(90, 100000);
+
+    //chassis.setPose(0,0,0);
 
 }
 
