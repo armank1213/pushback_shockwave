@@ -35,19 +35,22 @@ pros::Optical light_source(10);
 pros::adi::Pneumatics matchLoad('H', false);
 
 // tracking wheels
+// 11 inch long
+// 13.5 inch wide
+// Tracking center (6.875, 5.5)
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
 pros::Rotation horizontal_rotation(2);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation vertical_rotation(5);
+pros::Rotation vertical_rotation(3);
 // horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.75);
+lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -1);
 // vertical tracking wheel. 2" diameter, 0.37" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, -0.37);
+lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, 0.0625);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              12.44, // 12.44 inch track width
+                              12.75, // 12.75 inch track width
                               lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
                               360, // drivetrain rpm is 360
                               2 // horizontal drift is 2. If we had traction wheels, it would have been 8
@@ -112,23 +115,31 @@ lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensor
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-    
     pros::lcd::initialize(); // initialize brain screen
-    chassis.calibrate(); // calibrate the chassis sensors.
+    chassis.calibrate(); // calibrate sensors
 
-    /*
-    while (true) {
-        // print measurements from the rotation sensor
-        pros::lcd::print(1, "Rotation Sensor: %i", vertical_rotation.get_position());
-        pros::delay(10); // delay to save resources. DO NOT REMOVE
-    }
-    */
+    // the default rate is 50. however, if you need to change the rate, you
+    // can do the following.
+    // lemlib::bufferedStdout().setRate(...);
+    // If you use bluetooth or a wired connection, you will want to have a rate of 10ms
 
-    pros::Task screen_task([&]() {
+    // for more information on how the formatting for the loggers
+    // works, refer to the fmtlib docs
+
+    // thread to for brain screen and position logging
+    pros::Task screenTask([&]() {
         while (true) {
-            
+            // print robot location to the brain screen
+            // pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+            // pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+            // pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            pros::lcd::print(3, "Vertical Rotation Sensor: %i", vertical_rotation.get_position());
+            pros::lcd::print(4, "Horizontal Rotation Sensor: %i", horizontal_rotation.get_position());
+
+            // log position telemetry
+            lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
             // delay to save resources
-            pros::delay(20);
+            pros::delay(50);
         }
     });
 }
@@ -170,17 +181,6 @@ void opcontrol() {
     bool pistonToggle = false;
 
     while (true) {
-
-            lemlib::Pose pose = chassis.getPose();
-
-            pros::lcd::print(0, "X: %f", pose.x); // x
-            pros::lcd::print(1, "Y: %f", pose.y); // y
-            pros::lcd::print(2, "Theta: %f", pose.theta); // heading
-            pros::lcd::print(3, "Rotation Sensor: %i", vertical_rotation.get_position());
-
-
-
-
         // get joystick positions
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
