@@ -36,7 +36,7 @@ pros::adi::Pneumatics matchLoad('H', false);
 
 // tracking wheels
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
-pros::Rotation horizontal_rotation(2);
+pros::Rotation horizontal_rotation(-2);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
 pros::Rotation vertical_rotation(-3);
 // horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
