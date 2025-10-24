@@ -181,7 +181,9 @@ void autonomous() {
 void opcontrol() {
     
 	void manual_in_out();
-	void manual_sort();
+    
+	// void manual_sort();
+
 	void colorSort();
 
     void middle_goal();
