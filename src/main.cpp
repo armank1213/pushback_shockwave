@@ -116,6 +116,8 @@ lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensor
  */
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
+    vertical_rotation.reset(); // reset vertical rotation sensor
+    horizontal_rotation.reset(); // reset horizontal rotation sensor
     chassis.calibrate(); // calibrate sensors
 
     // the default rate is 50. however, if you need to change the rate, you
@@ -130,11 +132,11 @@ void initialize() {
     pros::Task screenTask([&]() {
         while (true) {
             // print robot location to the brain screen
-            // pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-            // pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-            // pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-            pros::lcd::print(3, "Vertical Rotation Sensor: %i", vertical_rotation.get_position());
-            pros::lcd::print(4, "Horizontal Rotation Sensor: %i", horizontal_rotation.get_position());
+            pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+            pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+            pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            // pros::lcd::print(3, "Vertical Rotation Sensor: %i", vertical_rotation.get_position());
+            // pros::lcd::print(4, "Horizontal Rotation Sensor: %i", horizontal_rotation.get_position());
 
             // log position telemetry
             lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
@@ -163,12 +165,15 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
  */
 void autonomous() {
 
-    // Angular PID Tuning
-    //chassis.setPose(0, 0, 0);
-    //chassis.turnToHeading(90, 100000);
+    // Angular PID Tuning 
 
-    //chassis.setPose(0,0,0);
+    chassis.setPose(0, 0,0);
+    chassis.turnToHeading(90, 100000);
 
+    /* Lateral PID Tuning 
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPoint(24, 0, 100000);
+    */
 }
 
 
@@ -231,22 +236,31 @@ void middleTake(int middletakePower) {
     middletakeMotor.move(middletakePower);
 }
 
+void middle_goal() {
+    if (controller.get_digital(DIGITAL_L1)) {
+        middleTake(127);
+    } 
+    else if (controller.get_digital(DIGITAL_L2)) {
+        middleTake(-127); // regular outake
+    }
+    else {
+        middleTake(0);
+    }
+}
+
 // Manual Intake/Outtake
 void manual_in_out() {
 	if (controller.get_digital(DIGITAL_R1)) {
 		in_out(127);
         outtakeMotor.move(127);
-        middleTake(-127);
 	}
 	else if (controller.get_digital(DIGITAL_R2)) {
       in_out(-127);
       outtakeMotor.move(-127);
-      middleTake(127);
     }
 	else {
       in_out(0);
       outtakeMotor.move(0);
-      middleTake(0);
     }
 }
 
