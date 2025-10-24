@@ -18,7 +18,6 @@ pros::Motor intakeMotor(9, pros::v5::MotorGears::green); // intake motor on port
 pros::Motor outtakeMotor(-6, pros::v5::MotorGears::green); // conveyor motor on port 6
 
 pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
-pros::Motor conveyorMotor(14, pros::v5::MotorGears::green); // outtake motor on port 14
 pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
 
 // intake and outtake motor group
@@ -259,15 +258,12 @@ void middle_goal() {
 void manual_in_out() {
 	if (controller.get_digital(DIGITAL_R1)) {
 		in_out(127);
-        conveyorMotor.move(127);
 	}
 	else if (controller.get_digital(DIGITAL_R2)) {
       in_out(-127);
-      conveyorMotor.move(-127);
     }
 	else {
       in_out(0);
-      conveyorMotor.move(0);
     }
 }
 
