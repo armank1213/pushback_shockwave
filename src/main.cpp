@@ -1,6 +1,7 @@
 #include "main.h"
 #include "pros/adi.hpp"
 #include "lemlib/api.hpp" // IWYU pragma: keep
+#include "pros/misc.h"
 #include "pros/vision.h"
 
 // controller
@@ -181,9 +182,9 @@ void opcontrol() {
     
 	void manual_in_out();
 
-	// void manual_sort();
+	void manual_sort();
 
-	void colorSort();
+	// void colorSort();
 
     void middle_goal();
 
@@ -205,11 +206,11 @@ void opcontrol() {
 
         middle_goal();
 
-        // manual_sort();
+        manual_sort();
 
         light_source.set_led_pwm(100); // set the light source to maximum brightness
 
-        colorSort();
+        // colorSort();
 
         // Pneumatics Toggle
         if (controller.get_digital(DIGITAL_X)) {
@@ -269,10 +270,10 @@ void manual_in_out() {
 
 // Manual Sorting
 void manual_sort() {
-	if (controller.get_digital(DIGITAL_L1)) {
+	if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
       sort(-127);
     }
-	else if (controller.get_digital(DIGITAL_L2)) {
+	else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
       sort(127);
     }
 	else {
