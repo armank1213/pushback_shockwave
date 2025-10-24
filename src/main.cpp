@@ -1,6 +1,7 @@
 #include "main.h"
 #include "pros/adi.hpp"
 #include "lemlib/api.hpp" // IWYU pragma: keep
+#include "pros/misc.h"
 #include "pros/vision.h"
 
 // controller
@@ -15,13 +16,13 @@ pros::Imu imu(1);
 
 // Motors
 pros::Motor intakeMotor(9, pros::v5::MotorGears::green); // intake motor on port 9
-pros::Motor conveyorMotor(6, pros::v5::MotorGears::green); // conveyor motor on port 6
+pros::Motor outtakeMotor(-6, pros::v5::MotorGears::green); // conveyor motor on port 6
+
 pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
-pros::Motor outtakeMotor(14, pros::v5::MotorGears::green); // outtake motor on port 14
 pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
 
 // intake and outtake motor group
-pros::MotorGroup in_outGroup({9, 6}); 
+pros::MotorGroup in_outGroup({9, -6}); 
 
 // Vision & Signatures
 // vision sensor signature IDs
@@ -35,19 +36,22 @@ pros::Optical light_source(10);
 pros::adi::Pneumatics matchLoad('H', false);
 
 // tracking wheels
+// 11 inch long
+// 13.5 inch wide
+// Tracking center (6.875, 5.5)
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
 pros::Rotation horizontal_rotation(-2);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation vertical_rotation(-3);
+pros::Rotation vertical_rotation(3);
 // horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.75);
+lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -1);
 // vertical tracking wheel. 2" diameter, 0.37" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical(&vertical_rotation, lemlib::Omniwheel::NEW_2, -0.37);
+lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, 0.0625);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              12.44, // 12.44 inch track width
+                              12.75, // 12.75 inch track width
                               lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
                               360, // drivetrain rpm is 360
                               2 // horizontal drift is 2. If we had traction wheels, it would have been 8
@@ -80,11 +84,12 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
 // sensors for odometry
 // Tracking center: (8,8.25)
 // Vertical Tracking Wheel Offset: 8-7.63 = 0.37 left of the tracking center (-0.37)
+// Horizontal Tracking Wheel Offset: 
 
 
-lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel
+lemlib::OdomSensors sensors(&vertical_wheel, // vertical tracking wheel
                             nullptr, // vertical tracking wheel 2, set to nullptr as we don't have a second one
-                            nullptr, // horizontal tracking wheel
+                            &horizontal_wheel, // horizontal tracking wheel
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
@@ -111,25 +116,33 @@ lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensor
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-    
     pros::lcd::initialize(); // initialize brain screen
-    chassis.calibrate(); // calibrate the chassis sensors.
+    vertical_rotation.reset(); // reset vertical rotation sensor
+    horizontal_rotation.reset(); // reset horizontal rotation sensor
+    chassis.calibrate(); // calibrate sensors
 
-    /*
-    while (true) {
-        // print measurements from the rotation sensor
-        pros::lcd::print(1, "Rotation Sensor: %i", vertical_rotation.get_position());
-        pros::delay(10); // delay to save resources. DO NOT REMOVE
-    }
-    */
+    // the default rate is 50. however, if you need to change the rate, you
+    // can do the following.
+    // lemlib::bufferedStdout().setRate(...);
+    // If you use bluetooth or a wired connection, you will want to have a rate of 10ms
 
-    pros::Task screen_task([&]() {
+    // for more information on how the formatting for the loggers
+    // works, refer to the fmtlib docs
+
+    // thread to for brain screen and position logging
+    pros::Task screenTask([&]() {
         while (true) {
+            // print robot location to the brain screen
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            // pros::lcd::print(3, "Vertical Rotation Sensor: %i", vertical_rotation.get_position());
+            // pros::lcd::print(4, "Horizontal Rotation Sensor: %i", horizontal_rotation.get_position());
+
+            // log position telemetry
+            lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
             // delay to save resources
-            pros::delay(20);
+            pros::delay(50);
         }
     });
 }
@@ -153,18 +166,27 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
  */
 void autonomous() {
 
-    // Angular PID Tuning
-    chassis.setPose(0, 0, 0);
+    // Angular PID Tuning 
+
+    chassis.setPose(0, 0,0);
     chassis.turnToHeading(90, 100000);
 
+    /* Lateral PID Tuning 
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPoint(24, 0, 100000);
+    */
 }
 
 
 void opcontrol() {
     
 	void manual_in_out();
+
 	void manual_sort();
-	void colorSort();
+
+	// void colorSort();
+
+    void middle_goal();
 
     bool pistonToggle = false;
 
@@ -182,11 +204,13 @@ void opcontrol() {
 
         manual_in_out();
 
-        // manual_sort();
+        middle_goal();
+
+        manual_sort();
 
         light_source.set_led_pwm(100); // set the light source to maximum brightness
 
-        colorSort();
+        // colorSort();
 
         // Pneumatics Toggle
         if (controller.get_digital(DIGITAL_X)) {
@@ -219,32 +243,38 @@ void middleTake(int middletakePower) {
     middletakeMotor.move(middletakePower);
 }
 
+void middle_goal() {
+    if (controller.get_digital(DIGITAL_L1)) {
+        middleTake(127); // middle outtake
+    } 
+    else if (controller.get_digital(DIGITAL_L2)) {
+        middleTake(-127); // regular outake
+    }
+    else {
+        middleTake(0);
+    }
+}
+
 // Manual Intake/Outtake
 void manual_in_out() {
 	if (controller.get_digital(DIGITAL_R1)) {
 		in_out(127);
-        outtakeMotor.move(127);
-        middleTake(-127);
 	}
 	else if (controller.get_digital(DIGITAL_R2)) {
       in_out(-127);
-      outtakeMotor.move(-127);
-      middleTake(127);
     }
 	else {
       in_out(0);
-      outtakeMotor.move(0);
-      middleTake(0);
     }
 }
 
 // Manual Sorting
 void manual_sort() {
-	if (controller.get_digital(DIGITAL_L1)) {
-      sort(-127);
-    }
-	else if (controller.get_digital(DIGITAL_L2)) {
+	if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
       sort(127);
+    }
+	else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+      sort(-127);
     }
 	else {
       sort(0);
