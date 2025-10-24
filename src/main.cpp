@@ -271,10 +271,10 @@ void manual_in_out() {
 // Manual Sorting
 void manual_sort() {
 	if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-      sort(-127);
+      sort(127);
     }
 	else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-      sort(127);
+      sort(-127);
     }
 	else {
       sort(0);
