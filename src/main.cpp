@@ -15,14 +15,14 @@ pros::Imu imu(1);
 
 // Motors
 pros::Motor intakeMotor(9, pros::v5::MotorGears::green); // intake motor on port 9
-pros::Motor conveyorMotor(6, pros::v5::MotorGears::green); // conveyor motor on port 6
+pros::Motor outtakeMotor(-6, pros::v5::MotorGears::green); // conveyor motor on port 6
 
 pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
-pros::Motor outtakeMotor(14, pros::v5::MotorGears::green); // outtake motor on port 14
+pros::Motor conveyorMotor(14, pros::v5::MotorGears::green); // outtake motor on port 14
 pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
 
 // intake and outtake motor group
-pros::MotorGroup in_outGroup({9, 6}); 
+pros::MotorGroup in_outGroup({9, -6}); 
 
 // Vision & Signatures
 // vision sensor signature IDs
@@ -181,7 +181,7 @@ void autonomous() {
 void opcontrol() {
     
 	void manual_in_out();
-    
+
 	// void manual_sort();
 
 	void colorSort();
@@ -245,7 +245,7 @@ void middleTake(int middletakePower) {
 
 void middle_goal() {
     if (controller.get_digital(DIGITAL_L1)) {
-        middleTake(127);
+        middleTake(127); // middle outtake
     } 
     else if (controller.get_digital(DIGITAL_L2)) {
         middleTake(-127); // regular outake
@@ -259,15 +259,15 @@ void middle_goal() {
 void manual_in_out() {
 	if (controller.get_digital(DIGITAL_R1)) {
 		in_out(127);
-        outtakeMotor.move(127);
+        conveyorMotor.move(127);
 	}
 	else if (controller.get_digital(DIGITAL_R2)) {
       in_out(-127);
-      outtakeMotor.move(-127);
+      conveyorMotor.move(-127);
     }
 	else {
       in_out(0);
-      outtakeMotor.move(0);
+      conveyorMotor.move(0);
     }
 }
 
