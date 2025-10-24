@@ -16,6 +16,7 @@ pros::Imu imu(1);
 // Motors
 pros::Motor intakeMotor(9, pros::v5::MotorGears::green); // intake motor on port 9
 pros::Motor conveyorMotor(6, pros::v5::MotorGears::green); // conveyor motor on port 6
+
 pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
 pros::Motor outtakeMotor(14, pros::v5::MotorGears::green); // outtake motor on port 14
 pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
@@ -183,6 +184,8 @@ void opcontrol() {
 	void manual_sort();
 	void colorSort();
 
+    void middle_goal();
+
     bool pistonToggle = false;
 
     while (true) {
@@ -198,6 +201,8 @@ void opcontrol() {
 
 
         manual_in_out();
+
+        middle_goal();
 
         // manual_sort();
 
