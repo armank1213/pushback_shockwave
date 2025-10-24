@@ -208,9 +208,9 @@ void opcontrol() {
 
         manual_sort();
 
-        light_source.set_led_pwm(100); // set the light source to maximum brightness
-
         // colorSort();
+
+        light_source.set_led_pwm(100); // set the light source to maximum brightness
 
         // Pneumatics Toggle
         if (controller.get_digital(DIGITAL_X)) {
