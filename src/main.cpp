@@ -15,17 +15,17 @@ pros::MotorGroup rightMotors({-11, 12, 13}, pros::MotorGearset::green); // right
 pros::Imu imu(1);
 
 // Motors
-pros::Motor outtakeMotor(9, pros::v5::MotorGears::green); // outtake motor on port 9
+pros::Motor outtakeMotor(5, pros::v5::MotorGears::green); // outtake motor on port 9
 pros::Motor intakeMotor(-6, pros::v5::MotorGears::green); // intake motor on port 6
 
 pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
 pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
 
 // long goal outtake motor group
-pros::MotorGroup longTake({9, -6}); 
+pros::MotorGroup longTake({5, -6}); 
 
 // middle goal outtake motor group
-pros::MotorGroup middleTake({-9, 15});
+pros::MotorGroup middleTake({-5, 15});
 
 // vision sensor signature IDs
 // pros::Vision visionSensor(8);
@@ -291,7 +291,7 @@ void colorSort() {
 
     int distance = distanceSensor.get_distance();
 
-    if (distance < 100) { // if an object is detected within 100mm
+    if (distance < 135) { // if an object is detected within 100mm
 
         double hue = colorSensor.get_hue();
 
