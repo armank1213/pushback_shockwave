@@ -190,11 +190,14 @@ void opcontrol() {
 
 	// void manual_sort();
 
-	void colorSort();
+	void redSort(int sortMode, int distance, double hue);
+
+    // void blueSort(int sortMode, int distance, double hue);
 
     void middle_goal();
 
     bool pistonToggle = false;
+    static bool lastAButtonState = false;
 
     while (true) {
         // get joystick positions
@@ -204,31 +207,49 @@ void opcontrol() {
 		// chassis.tank(leftY, rightX);
         // chassis.curvature(-rightX, -leftY, false);
         chassis.arcade(-rightX, -leftY, false, .3);
-        // delay to save resources
-        pros::delay(25);
 
         long_goal();
 
         middle_goal();
 
-        colorSort();
 
-        // colorSensor.set_led_pwm(100);
+        int distance = distanceSensor.get_distance();
+
+        double hue = colorSensor.get_hue();
+
+        static int sortMode = 0;
+        static bool LastButtonState = false;
+
+        bool CurrentButtonState = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
+
+        if (CurrentButtonState && !LastButtonState) {
+            sortMode = 1 - sortMode;
+        }
+
+        LastButtonState = CurrentButtonState;
+
+
+        redSort(sortMode, distance, hue);
+
+        // blueSort(sortMode, distance, hue);
 
         // manual_sort();
 
         // Pneumatics Toggle
-        if (controller.get_digital(DIGITAL_A)) {
-            if (pistonToggle == false) {
+        bool currentA = controller.get_digital(DIGITAL_A);
+
+        if (currentA && !lastAButtonState) {
+            pistonToggle = !pistonToggle;
+            if (pistonToggle) {
                 matchLoad.extend();
-                pros::delay(250);
-                pistonToggle = true;
             } else {
                 matchLoad.retract();
-                pros::delay(250);
-                pistonToggle = false;
             }
         }
+        lastAButtonState = currentA;
+
+        // delay to save resources
+        pros::delay(25);
     }
 }
 
@@ -287,24 +308,56 @@ void manual_sort() {
 }
 
 // Color Sorting 
-void colorSort() {
+void redSort(int sortMode, int distance, double hue) {
 
-    int distance = distanceSensor.get_distance();
+    if (distance < 135) { // if an object is detected within 135mm
+        if (sortMode == 0) { 
+            if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35)) {
+                sort(127);
+            } else if (hue <= 250 && hue >= 180) {
+                sort(-127);
+            } else {
+                sort(0);
+            }
+        }
 
-    if (distance < 135) { // if an object is detected within 100mm
-
-        double hue = colorSensor.get_hue();
-
-        if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35)) {
-            sort(127); 
-        } 
-        else if (hue <= 250 && hue >= 180) {
-            sort(-127);
-        } else {
-            sort(0);
+        else if (sortMode == 1) {
+            if (hue <= 250 && hue >= 180) {
+                sort(127);
+            } else if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35)) {
+                sort(127);
+            } else {
+                sort(0);
+            }
         }
     } else {
         sort(0);
     }
-    pros::delay(20);
+}
+
+void blueSort(int sortMode, int distance, double hue) {
+
+    if (distance < 135) { // if an object is detected within 135mm
+        if (sortMode == 0) { 
+            if (hue <= 250 && hue >= 180) {
+                sort(127);
+            } else if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35)) {
+                sort(-127);
+            } else {
+                sort(0);
+            }
+        }
+
+        else if (sortMode == 1) {
+            if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35)) {
+                sort(127);
+            } else if (hue <= 250 && hue >= 180) {
+                sort(127);
+            } else {
+                sort(0);
+            }
+        }
+    } else {
+        sort(0);
+    }
 }
