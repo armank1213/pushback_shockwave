@@ -8,6 +8,18 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // motor groups
+
+/*
+    Motor Layout:
+        Left Side Motors:
+            - Port 18 = Front Motor
+            - Port 19 = Reversed Motor (Top Stack Motor)
+            - Port 20 = Bottom Stack Motor
+        Right Side Motors:
+            - Port 11 = Reversed Motor (Top Stack Motor)
+            - Port 12 = Bottom Stack Motor
+            - Port 13 = Front Motor
+*/
 pros::MotorGroup leftMotors({18, -19, 20}, pros::MotorGearset::green); // left motor group - ports 18, 19 (reversed), 20
 pros::MotorGroup rightMotors({-11, 12, 13}, pros::MotorGearset::green); // right motor group - ports 11 (reversed), 12, 13
 
@@ -190,11 +202,13 @@ void opcontrol() {
 
 	// void manual_sort();
 
-	void redSort(int sortMode, int distance, double hue);
+	// void redSort(int sortMode, int distance, double hue);
 
-    // void blueSort(int sortMode, int distance, double hue);
+    void blueSort(int sortMode, int distance, double hue);
 
     void middle_goal();
+
+    void antiJam();
 
     bool pistonToggle = false;
     static bool lastAButtonState = false;
@@ -231,9 +245,11 @@ void opcontrol() {
         LastButtonState = CurrentButtonState;
 
 
-        redSort(sortMode, distance, hue);
+        // redSort(sortMode, distance, hue);
 
-        // blueSort(sortMode, distance, hue);
+        blueSort(sortMode, distance, hue);
+
+        antiJam();
 
         // manual_sort();
 
@@ -361,5 +377,29 @@ void blueSort(int sortMode, int distance, double hue) {
         }
     } else {
         sort(0);
+    }
+}
+
+void antiJam() {
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+        int count = 0;
+
+        while (true) {
+            count++;
+            if (count > 100) {
+                intakeMotor.move(127);
+                sortMotor.move(-127);
+                middletakeMotor.move(127);
+                outtakeMotor.move(127);
+            }
+            else if (count < 100) {
+                intakeMotor.move(-127);
+                sortMotor.move(127);
+                middletakeMotor.move(-127);
+                outtakeMotor.move(-127);
+            }
+            count = 0;
+        }
+
     }
 }
