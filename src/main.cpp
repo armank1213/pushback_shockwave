@@ -15,14 +15,17 @@ pros::MotorGroup rightMotors({-11, 12, 13}, pros::MotorGearset::green); // right
 pros::Imu imu(1);
 
 // Motors
-pros::Motor intakeMotor(9, pros::v5::MotorGears::green); // intake motor on port 9
-pros::Motor outtakeMotor(-6, pros::v5::MotorGears::green); // conveyor motor on port 6
+pros::Motor outtakeMotor(9, pros::v5::MotorGears::green); // outtake motor on port 9
+pros::Motor intakeMotor(-6, pros::v5::MotorGears::green); // intake motor on port 6
 
 pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
 pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
 
-// intake and outtake motor group
+// long goal outtake motor group
 pros::MotorGroup longTake({9, -6}); 
+
+// middle goal outtake motor group
+pros::MotorGroup middleTake({-9, 15});
 
 // Vision & Signatures
 // vision sensor signature IDs
@@ -180,11 +183,11 @@ void autonomous() {
 
 void opcontrol() {
     
-	void manual_in_out();
+	void long_goal();
 
 	void manual_sort();
 
-	// void colorSort();
+	void colorSort();
 
     void middle_goal();
 
@@ -202,18 +205,18 @@ void opcontrol() {
         pros::delay(25);
 
 
-        manual_in_out();
+        long_goal();
 
         middle_goal();
 
         manual_sort();
 
-        // colorSort();
+        colorSort();
 
         light_source.set_led_pwm(100); // set the light source to maximum brightness
 
         // Pneumatics Toggle
-        if (controller.get_digital(DIGITAL_X)) {
+        if (controller.get_digital(DIGITAL_A)) {
             if (pistonToggle == false) {
                 matchLoad.extend();
                 pros::delay(250);
@@ -240,15 +243,15 @@ void sort(int sortPower) {
 
 // Middle Take Motor Function
 void middleGoal(int middletakePower) {
-    middletakeMotor.move(middletakePower);
+    middleTake.move(middletakePower);
 }
 
 void middle_goal() {
     if (controller.get_digital(DIGITAL_L1)) {
-        middleGoal(127); // middle outtake
+        middleGoal(127);
     } 
     else if (controller.get_digital(DIGITAL_L2)) {
-        middleGoal(-127); // regular outake
+        middleGoal(-127);
     }
     else {
         middleGoal(0);
@@ -256,12 +259,12 @@ void middle_goal() {
 }
 
 // Manual Intake/Outtake
-void manual_in_out() {
+void long_goal() {
 	if (controller.get_digital(DIGITAL_R1)) {
-		longGoal(127);
+		longGoal(-127);
 	}
 	else if (controller.get_digital(DIGITAL_R2)) {
-      longGoal(-127);
+      longGoal(127);
     }
 	else {
       longGoal(0);
