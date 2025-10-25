@@ -2,7 +2,6 @@
 #include "pros/adi.hpp"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "pros/misc.h"
-#include "pros/vision.h"
 
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -29,12 +28,16 @@ pros::MotorGroup middleTake({-9, 15});
 
 // Vision & Signatures
 // vision sensor signature IDs
-pros::Vision visionSensor(8);
-pros::vision_signature_s_t BLUE_SIG  = pros::Vision::signature_from_utility(1, -4089, -2329, -3210, 2711, 4961, 3836, 2.100, 0);
-pros::vision_signature_s_t RED_SIG  = pros::Vision::signature_from_utility(2, 4861, 11873, 8368, -1889, -225, -1058, 1.300, 0);
+// pros::Vision visionSensor(8);
+// pros::vision_signature_s_t BLUE_SIG  = pros::Vision::signature_from_utility(1, -4089, -2329, -3210, 2711, 4961, 3836, 2.100, 0);
+// pros::vision_signature_s_t RED_SIG  = pros::Vision::signature_from_utility(2, 4861, 11873, 8368, -1889, -225, -1058, 1.300, 0);
 
 // Optical Sensor
-pros::Optical light_source(10);
+pros::Optical colorSensor(10);
+
+// Distance Sensor 
+pros::Distance distanceSensor(7);
+
 // Pneumatics
 pros::adi::Pneumatics matchLoad('H', false);
 
@@ -185,7 +188,7 @@ void opcontrol() {
     
 	void long_goal();
 
-	void manual_sort();
+	// void manual_sort();
 
 	void colorSort();
 
@@ -204,16 +207,13 @@ void opcontrol() {
         // delay to save resources
         pros::delay(25);
 
-
         long_goal();
 
         middle_goal();
 
-        manual_sort();
-
         colorSort();
 
-        light_source.set_led_pwm(100); // set the light source to maximum brightness
+        // manual_sort();
 
         // Pneumatics Toggle
         if (controller.get_digital(DIGITAL_A)) {
@@ -286,17 +286,24 @@ void manual_sort() {
 
 // Color Sorting 
 void colorSort() {
-   pros::vision_object_s_t block = visionSensor.get_by_size(0);
 
-    if (block.signature == RED_SIG.id && block.width > 100) {
-        sort(127);
-        pros::delay(200);
+    int distance = distanceSensor.get_distance();
+    int size = distanceSensor.get_object_size();
+
+    if (distance < 100 && size > 200) {
+        pros::c::optical_rgb_s_t color = colorSensor.get_rgb(); // get the color reading
+        colorSensor.set_led_pwm(100); // set LED to maximum brightness
+
+        if (color.red > color.blue && color.red > color.green) {
+            sort(127); 
+        } 
+        else if (color.blue > color.red && color.blue > color.green) {
+            sort(-127);
+        } else {
+            sort(0);
+        }
+    } else {
+        colorSensor.set_led_pwm(0); // turn off LED when no block detected
     }
-    else if (block.signature == BLUE_SIG.id && block.width > 100) {
-        sort(-127);
-        pros::delay(100);
-    }
-    else {
-        sort(0);
-    }
+    pros::delay(20);
 }
