@@ -290,7 +290,6 @@ void manual_sort() {
 void colorSort() {
 
     int distance = distanceSensor.get_distance();
-    int size = distanceSensor.get_object_size();
 
     if (distance < 100) { // if an object is detected within 100mm
         colorSensor.set_led_pwm(100); // set LED to maximum brightness
