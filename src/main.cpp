@@ -203,9 +203,11 @@ void opcontrol() {
         // get joystick positions
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+
         // move the chassis with curvature drive
 		// chassis.tank(leftY, rightX);
         // chassis.curvature(-rightX, -leftY, false);
+        
         chassis.arcade(-rightX, -leftY, false, .3);
 
         long_goal();
