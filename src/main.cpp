@@ -289,7 +289,7 @@ void colorSort() {
     int distance = distanceSensor.get_distance();
     int size = distanceSensor.get_object_size();
 
-    if (distance < 100 && size > 200) {
+    if (distance < 100 && size > 100) {
         pros::c::optical_rgb_s_t color = colorSensor.get_rgb(); // get the color reading
         colorSensor.set_led_pwm(100); // set LED to maximum brightness
 
