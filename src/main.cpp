@@ -295,16 +295,14 @@ void colorSort() {
 
         double hue = colorSensor.get_hue();
 
-        if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 10)) {
+        if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35)) {
             sort(127); 
         } 
-        else if (hue <= 240 && hue >= 200) {
+        else if (hue <= 250 && hue >= 180) {
             sort(-127);
         } else {
             sort(0);
         }
-    } else {
-        sort(0);
     }
     pros::delay(20);
 }
