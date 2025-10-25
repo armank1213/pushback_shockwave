@@ -189,7 +189,7 @@ void opcontrol() {
 
 	// void manual_sort();
 
-	//void colorSort();
+	void colorSort();
 
     void middle_goal();
 
@@ -210,9 +210,9 @@ void opcontrol() {
 
         middle_goal();
 
-        // colorSort();
+        colorSort();
 
-        colorSensor.set_led_pwm(100);
+        // colorSensor.set_led_pwm(100);
 
         // manual_sort();
 
@@ -291,7 +291,7 @@ void colorSort() {
     int distance = distanceSensor.get_distance();
     int size = distanceSensor.get_object_size();
 
-    if (distance < 100 && size > 100) {
+    if (distance < 100 && size > 150) {
         colorSensor.set_led_pwm(100); // set LED to maximum brightness
 
         double hue = colorSensor.get_hue();
