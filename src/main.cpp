@@ -212,6 +212,8 @@ void opcontrol() {
 
         colorSort();
 
+        colorSensor.set_led_pwm(100);
+
         // manual_sort();
 
         // Pneumatics Toggle
