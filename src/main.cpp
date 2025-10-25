@@ -303,6 +303,8 @@ void colorSort() {
         } else {
             sort(0);
         }
+    } else {
+        sort(0);
     }
     pros::delay(20);
 }
