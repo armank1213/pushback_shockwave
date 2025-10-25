@@ -292,20 +292,18 @@ void colorSort() {
     int distance = distanceSensor.get_distance();
 
     if (distance < 100) { // if an object is detected within 100mm
-        colorSensor.set_led_pwm(50); // set LED to maximum brightness
 
         double hue = colorSensor.get_hue();
 
-        if (hue >= 0 && hue <= 15) {
+        if ((hue <= 360 && hue >= 350) || (hue >= 0 && hue <= 10)) {
             sort(127); 
         } 
-        else if (hue <= 360 && hue >= 250) {
+        else if (hue <= 240 && hue >= 200) {
             sort(-127);
         } else {
             sort(0);
         }
     } else {
-        colorSensor.set_led_pwm(0); // turn off LED when no block detected
         sort(0);
     }
     pros::delay(20);
