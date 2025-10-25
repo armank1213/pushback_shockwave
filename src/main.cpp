@@ -26,7 +26,6 @@ pros::MotorGroup longTake({9, -6});
 // middle goal outtake motor group
 pros::MotorGroup middleTake({-9, 15});
 
-// Vision & Signatures
 // vision sensor signature IDs
 // pros::Vision visionSensor(8);
 // pros::vision_signature_s_t BLUE_SIG  = pros::Vision::signature_from_utility(1, -4089, -2329, -3210, 2711, 4961, 3836, 2.100, 0);
@@ -231,7 +230,7 @@ void opcontrol() {
 }
 
 // Intake/Outtake Motor Function
-void longGoal(int in_out_power) {
+void longout(int in_out_power) {
 	longTake.move(in_out_power);
 }
 
@@ -242,32 +241,32 @@ void sort(int sortPower) {
 
 
 // Middle Take Motor Function
-void middleGoal(int middletakePower) {
+void middleout(int middletakePower) {
     middleTake.move(middletakePower);
 }
 
 void middle_goal() {
     if (controller.get_digital(DIGITAL_L1)) {
-        middleGoal(127);
+        middleout(127);
     } 
     else if (controller.get_digital(DIGITAL_L2)) {
-        middleGoal(-127);
+        middleout(-127);
     }
     else {
-        middleGoal(0);
+        middleout(0);
     }
 }
 
 // Manual Intake/Outtake
 void long_goal() {
 	if (controller.get_digital(DIGITAL_R1)) {
-		longGoal(-127);
+		longout(-127);
 	}
 	else if (controller.get_digital(DIGITAL_R2)) {
-      longGoal(127);
+      longout(127);
     }
 	else {
-      longGoal(0);
+      longout(0);
     }
 }
 
