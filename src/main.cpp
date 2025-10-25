@@ -297,7 +297,7 @@ void colorSort() {
 
         double hue = colorSensor.get_hue();
 
-        if (hue >= 0 || hue <= 15) {
+        if (hue >= 0 && hue <= 15) {
             sort(127); 
         } 
         else if (hue <= 360 && hue >= 250) {
