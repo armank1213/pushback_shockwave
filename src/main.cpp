@@ -292,19 +292,21 @@ void colorSort() {
     int size = distanceSensor.get_object_size();
 
     if (distance < 100 && size > 100) {
-        pros::c::optical_rgb_s_t color = colorSensor.get_rgb(); // get the color reading
         colorSensor.set_led_pwm(100); // set LED to maximum brightness
 
-        if (color.red > color.blue && color.red > color.green) {
+        double hue = colorSensor.get_hue();
+
+        if (hue >= 350 || hue <= 10) {
             sort(127); 
         } 
-        else if (color.blue > color.red && color.blue > color.green) {
+        else if (hue >= 180 && hue <= 260) {
             sort(-127);
         } else {
             sort(0);
         }
     } else {
         colorSensor.set_led_pwm(0); // turn off LED when no block detected
+        sort(0);
     }
     pros::delay(20);
 }
