@@ -189,7 +189,7 @@ void opcontrol() {
 
 	// void manual_sort();
 
-	void colorSort();
+	//void colorSort();
 
     void middle_goal();
 
@@ -210,7 +210,7 @@ void opcontrol() {
 
         middle_goal();
 
-        colorSort();
+        // colorSort();
 
         colorSensor.set_led_pwm(100);
 
