@@ -22,7 +22,7 @@ pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port
 pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
 
 // intake and outtake motor group
-pros::MotorGroup in_outGroup({9, -6}); 
+pros::MotorGroup longTake({9, -6}); 
 
 // Vision & Signatures
 // vision sensor signature IDs
@@ -228,8 +228,8 @@ void opcontrol() {
 }
 
 // Intake/Outtake Motor Function
-void in_out(int in_out_power) {
-	in_outGroup.move(in_out_power);
+void longGoal(int in_out_power) {
+	longTake.move(in_out_power);
 }
 
 // Sort Motor Function
@@ -239,32 +239,32 @@ void sort(int sortPower) {
 
 
 // Middle Take Motor Function
-void middleTake(int middletakePower) {
+void middleGoal(int middletakePower) {
     middletakeMotor.move(middletakePower);
 }
 
 void middle_goal() {
     if (controller.get_digital(DIGITAL_L1)) {
-        middleTake(127); // middle outtake
+        middleGoal(127); // middle outtake
     } 
     else if (controller.get_digital(DIGITAL_L2)) {
-        middleTake(-127); // regular outake
+        middleGoal(-127); // regular outake
     }
     else {
-        middleTake(0);
+        middleGoal(0);
     }
 }
 
 // Manual Intake/Outtake
 void manual_in_out() {
 	if (controller.get_digital(DIGITAL_R1)) {
-		in_out(127);
+		longGoal(127);
 	}
 	else if (controller.get_digital(DIGITAL_R2)) {
-      in_out(-127);
+      longGoal(-127);
     }
 	else {
-      in_out(0);
+      longGoal(0);
     }
 }
 
