@@ -208,7 +208,7 @@ void opcontrol() {
 
     void middle_goal();
 
-    void antiJam();
+    void antiJamControl();
 
     bool pistonToggle = false;
     static bool lastAButtonState = false;
@@ -249,7 +249,7 @@ void opcontrol() {
 
         blueSort(sortMode, distance, hue);
 
-        antiJam();
+        antiJamControl();
 
         // manual_sort();
 
@@ -380,26 +380,33 @@ void blueSort(int sortMode, int distance, double hue) {
     }
 }
 
-void antiJam() {
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-        int count = 0;
+void antiJamControl() {
 
-        while (true) {
-            count++;
-            if (count > 100) {
-                intakeMotor.move(127);
-                sortMotor.move(-127);
-                middletakeMotor.move(127);
-                outtakeMotor.move(127);
-            }
-            else if (count < 100) {
-                intakeMotor.move(-127);
-                sortMotor.move(127);
-                middletakeMotor.move(-127);
-                outtakeMotor.move(-127);
-            }
-            count = 0;
+    static int lastToggleTime = 0;
+    static int direction = 1;
+    static bool antiJamActive = false;
+
+
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+        antiJamActive = true;
+        int currentTime = pros::millis();
+
+        if (currentTime - lastToggleTime > 500) {
+            direction = (rand() % 2 == 0) ? 1: -1; // Randomly choose direction
+            lastToggleTime = currentTime;
         }
 
+        intakeMotor.move(127 * direction);
+        sortMotor.move(127 * direction);
+        middletakeMotor.move(-127 * direction);
+        outtakeMotor.move(-127 * direction);
+    } else {
+        if (antiJamActive) {
+            intakeMotor.move(0);
+            sortMotor.move(0);
+            middletakeMotor.move(0);
+            outtakeMotor.move(0);
+            antiJamActive = false;
+        }
     }
 }
