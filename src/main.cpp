@@ -33,6 +33,7 @@ pros::Motor intakeMotor(-6, pros::v5::MotorGears::green); // intake motor on por
 pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
 pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
 
+
 // long goal outtake motor group
 pros::MotorGroup longTake({5, -6}); 
 
