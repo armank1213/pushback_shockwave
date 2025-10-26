@@ -209,13 +209,13 @@ void opcontrol() {
 
 	// void manual_sort();
 
-	// void redSort(int sortMode, int distance, double hue);
+	void redSort(int sortMode, int distance, double hue);
 
-    void blueSort(int sortMode, int distance, double hue);
+    // void blueSort(int sortMode, int distance, double hue);
 
     void middle_goal();
 
-    void antiJamControl();
+    void antiJamControl(bool antiJamButtonPressed, bool isOurBlock);
 
     bool pistonToggle = false;
     static bool lastAButtonState = false;
@@ -235,11 +235,12 @@ void opcontrol() {
 
         middle_goal();
 
-
+        // get distance and color readings
         int distance = distanceSensor.get_distance();
 
         double hue = colorSensor.get_hue();
 
+        // logic for sorting mode toggle
         static int sortMode = 0;
         static bool LastButtonState = false;
 
@@ -251,12 +252,26 @@ void opcontrol() {
 
         LastButtonState = CurrentButtonState;
 
+        // logic for anti-jam control
+        const bool allianceColor = true; // true for red, false for blue
+        bool isOurBlock = false;
 
-        // redSort(sortMode, distance, hue);
+        if (distance < 135) {
+            if (allianceColor && ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35))) {
+                isOurBlock = true;
+            } else if (!allianceColor && (hue <= 250 && hue >= 180)) {
+                isOurBlock = true;
+            }
+        }
 
-        blueSort(sortMode, distance, hue);
+        bool antiJamButtonPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
 
-        antiJamControl();
+
+        redSort(sortMode, distance, hue);
+
+        // blueSort(sortMode, distance, hue);
+
+        antiJamControl(antiJamButtonPressed, isOurBlock);
 
         // manual_sort();
 
@@ -387,34 +402,39 @@ void blueSort(int sortMode, int distance, double hue) {
     }
 }
 
-void antiJamControl() {
 
+
+void antiJamControl(bool antiJamButtonPressed, bool isOurBlock) {
     static int lastToggleTime = 0;
     static int direction = 1;
     static bool antiJamActive = false;
 
-
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-        antiJamActive = true;
+    if (antiJamButtonPressed) {
         int currentTime = pros::millis();
 
-        if (currentTime - lastToggleTime > 500) {
-            direction = (rand() % 2 == 0) ? 1: -1; // Randomly choose direction
-            lastToggleTime = currentTime;
-        }
+        if (!isOurBlock) { 
+            antiJamActive = true;
 
-        intakeMotor.move(127 * direction);
-        sortMotor.move(127 * direction);
-        middletakeMotor.move(-127 * direction);
-        outtakeMotor.move(-127 * direction);
-        
-    } else {
-        if (antiJamActive) {
+            if (currentTime - lastToggleTime > 500) {
+                direction = (rand() % 2 == 0) ? 1 : -1;
+                lastToggleTime = currentTime;
+            }
+
+            intakeMotor.move(127 * direction);
+            sortMotor.move(127 * direction);
+            middletakeMotor.move(-127 * direction);
+            outtakeMotor.move(-127 * direction);
+        } else {
             intakeMotor.move(0);
             sortMotor.move(0);
             middletakeMotor.move(0);
             outtakeMotor.move(0);
-            antiJamActive = false;
         }
+    } else if (antiJamActive) {
+        intakeMotor.move(0);
+        sortMotor.move(0);
+        middletakeMotor.move(0);
+        outtakeMotor.move(0);
+        antiJamActive = false;
     }
 }
