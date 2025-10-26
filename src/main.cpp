@@ -109,7 +109,7 @@ lemlib::OdomSensors sensors(&vertical_wheel, // vertical tracking wheel
                             nullptr, // vertical tracking wheel 2, set to nullptr as we don't have a second one
                             &horizontal_wheel, // horizontal tracking wheel
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
-                            &imu // inertial sensor
+                            nullptr // inertial sensor
 );
 
 // input curve for throttle input during driver control
@@ -151,11 +151,11 @@ void initialize() {
     pros::Task screenTask([&]() {
         while (true) {
             // print robot location to the brain screen
-            pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-            pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-            pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-            // pros::lcd::print(3, "Vertical Rotation Sensor: %i", vertical_rotation.get_position());
-            // pros::lcd::print(4, "Horizontal Rotation Sensor: %i", horizontal_rotation.get_position());
+            //pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+            //pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+            //pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            pros::lcd::print(0, "Vertical Rotation Sensor: %i", vertical_rotation.get_position());
+            pros::lcd::print(1, "Horizontal Rotation Sensor: %i", horizontal_rotation.get_position());
 
             // log position telemetry
             lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
@@ -184,19 +184,25 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
  */
 void autonomous() {
 
+    leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
     // Angular PID Tuning 
 
     chassis.setPose(0, 0,0);
-    chassis.turnToHeading(90, 100000);
+    //chassis.turnToHeading(90, 100000);
 
-    /* Lateral PID Tuning 
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(24, 0, 100000);
-    */
+    // Lateral PID Tuning 
+    //chassis.setPose(0, 0, 0);
+    chassis.moveToPoint(0, 10, 100000);
+    
 }
 
 
 void opcontrol() {
+
+    leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     
 	void long_goal();
 
