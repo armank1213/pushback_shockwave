@@ -51,8 +51,10 @@ pros::Optical colorSensor(10);
 // Distance Sensor 
 pros::Distance distanceSensor(7);
 
-// Pneumatics
+// Matchload Pneumatics
 pros::adi::Pneumatics matchLoad('H', false);
+// Limiter Pneumatics
+pros::adi::Pneumatics limiter('G', false);
 
 // tracking wheels
 // 11 inch long
@@ -217,8 +219,11 @@ void opcontrol() {
 
     void antiJamControl(bool antiJamButtonPressed, bool isOurBlock);
 
-    bool pistonToggle = false;
+    bool matchloadPistonToggle = false;
     static bool lastAButtonState = false;
+
+    bool limiterPistonToggle = false;
+    bool lastYButtonState = false; // static needed
 
     while (true) {
         // get joystick positions
@@ -275,18 +280,31 @@ void opcontrol() {
 
         // manual_sort();
 
-        // Pneumatics Toggle
+        // Matchload Pneumatics Toggle
         bool currentA = controller.get_digital(DIGITAL_A);
 
         if (currentA && !lastAButtonState) {
-            pistonToggle = !pistonToggle;
-            if (pistonToggle) {
+            matchloadPistonToggle = !matchloadPistonToggle;
+            if (matchloadPistonToggle) {
                 matchLoad.extend();
             } else {
                 matchLoad.retract();
             }
         }
         lastAButtonState = currentA;
+
+        // Limiter Pneumatics Toggle
+        bool currentY = controller.get_digital(DIGITAL_Y);
+
+        if (currentY && !lastYButtonState) {
+            limiterPistonToggle = !limiterPistonToggle;
+            if (limiterPistonToggle) {
+                limiter.extend();
+            }
+            else {
+                limiter.retract();
+            }
+        }
 
         // delay to save resources
         pros::delay(25);
