@@ -400,6 +400,7 @@ void antiJamControl() {
         sortMotor.move(127 * direction);
         middletakeMotor.move(-127 * direction);
         outtakeMotor.move(-127 * direction);
+        
     } else {
         if (antiJamActive) {
             intakeMotor.move(0);
