@@ -363,7 +363,15 @@ void redSort(int sortMode, int distance, double hue) {
 
         else if (sortMode == 1) {
             if (hue <= 250 && hue >= 180) {
-                sort(127);
+                if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+                    sort(127);
+                }
+                else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+                    sort(-127);
+                }
+                else {
+                    sort(0);
+                }
             } else if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35)) {
                 sort(127);
             } else {
@@ -390,7 +398,12 @@ void blueSort(int sortMode, int distance, double hue) {
 
         else if (sortMode == 1) {
             if ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35)) {
-                sort(127);
+                if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+                    sort(127);
+                }
+                else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+                    sort(-127);
+                }
             } else if (hue <= 250 && hue >= 180) {
                 sort(127);
             } else {
@@ -401,6 +414,7 @@ void blueSort(int sortMode, int distance, double hue) {
         sort(0);
     }
 }
+
 
 
 
