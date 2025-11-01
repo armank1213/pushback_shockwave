@@ -12,33 +12,33 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 /*
     Motor Layout:
         Left Side Motors:
-            - Port 18 = Front Motor
-            - Port 19 = Reversed Motor (Top Stack Motor)
-            - Port 20 = Bottom Stack Motor
+            - Port 6 = Front Motor
+            - Port 5 = Reversed Motor (Top Stack Motor)
+            - Port 4 = Bottom Stack Motor
         Right Side Motors:
             - Port 11 = Reversed Motor (Top Stack Motor)
             - Port 12 = Bottom Stack Motor
-            - Port 13 = Front Motor
+            - Port 7 = Front Motor
 */
-pros::MotorGroup leftMotors({18, -19, 20}, pros::MotorGearset::green); // left motor group - ports 18, 19 (reversed), 20
-pros::MotorGroup rightMotors({-11, 12, 13}, pros::MotorGearset::green); // right motor group - ports 11 (reversed), 12, 13
+pros::MotorGroup leftMotors({6, -5, 4}, pros::MotorGearset::green); // left motor group - ports 6, 5 (reversed), 4
+pros::MotorGroup rightMotors({-11, 12, 7}, pros::MotorGearset::green); // right motor group - ports 11 (reversed), 12, 7
 
 // Inertial Sensor on port 1
 pros::Imu imu(1);
 
 // Motors
-pros::Motor outtakeMotor(5, pros::v5::MotorGears::green); // outtake motor on port 9
-pros::Motor intakeMotor(-6, pros::v5::MotorGears::green); // intake motor on port 6
+pros::Motor outtakeMotor(20, pros::v5::MotorGears::green); // outtake motor on port 20
+pros::Motor intakeMotor(-2, pros::v5::MotorGears::green); // intake motor on port 2 (reversed)
 
-pros::Motor sortMotor(16, pros::v5::MotorGears::green); // sorting motor on port 16
-pros::Motor middletakeMotor(15, pros::v5::MotorGears::green); // middletake motor on port 15
+pros::Motor sortMotor(1, pros::v5::MotorGears::green); // sorting motor on port 1
+pros::Motor middletakeMotor(9, pros::v5::MotorGears::green); // middletake motor on port 9
 
 
 // long goal outtake motor group
-pros::MotorGroup longTake({5, -6}); 
+pros::MotorGroup longTake({20, -2}); 
 
 // middle goal outtake motor group
-pros::MotorGroup middleTake({-5, 15});
+pros::MotorGroup middleTake({20, 9});
 
 // vision sensor signature IDs
 // pros::Vision visionSensor(8);
@@ -46,10 +46,10 @@ pros::MotorGroup middleTake({-5, 15});
 // pros::vision_signature_s_t RED_SIG  = pros::Vision::signature_from_utility(2, 4861, 11873, 8368, -1889, -225, -1058, 1.300, 0);
 
 // Optical Sensor
-pros::Optical colorSensor(10);
+pros::Optical colorSensor(19);
 
 // Distance Sensor 
-pros::Distance distanceSensor(7);
+pros::Distance distanceSensor(14);
 
 // Matchload Pneumatics
 pros::adi::Pneumatics matchLoad('H', false);
@@ -61,9 +61,9 @@ pros::adi::Pneumatics limiter('G', false);
 // 13.5 inch wide
 // Tracking center (6.875, 5.5)
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
-pros::Rotation horizontal_rotation(-2);
+pros::Rotation horizontal_rotation(-10);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-pros::Rotation vertical_rotation(3);
+pros::Rotation vertical_rotation(18);
 // horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
 lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -1);
 // vertical tracking wheel. 2" diameter, 0.37" offset, left of the robot (negative)
