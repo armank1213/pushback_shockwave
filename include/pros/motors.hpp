@@ -54,10 +54,12 @@ class Motor : public AbstractMotor, public Device {
 	 * \param gearset = pros::v5::MotorGears::green
 	 * 		  Optional parameter for the gearset for the motor.
 	 * 		  Does not explicitly set the gearset if not specified or if the gearset is invalid
+	 * \param reverse
 	 *
 	 * \param encoder_units = pros::v5::MotorUnits::degrees
 	 * 		  Optional parameter for the encoder units of the motor
 	 * 		  Does not explicitly set the gearset if not specified or if the gearset is invalid
+	 * 
 	 *
 	 * \b Example
 	 * \code
