@@ -8,8 +8,16 @@
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-// auton selection
+// lvgl
+// label to display vertical displacement and horizontal displacement
+lv_obj_t *vlabel = NULL; // vertical
+lv_obj_t *hlabel = NULL; // horizontal
+lv_obj_t *poseXYlabel = NULL; // x and y coords
+lv_obj_t *poseTlabel = NULL; // theta (direction robot is facing)
+// auton selector variable
 static int autonSelection = 0;
+
+
 
 // motor groups
 
@@ -67,28 +75,28 @@ pros::adi::Pneumatics wing('C', false);
 // 11 inch long
 // 13.5 inch wide
 // Tracking center (6.875, 5.5)
-// horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
+// horizontal tracking wheel encoder. Rotation sensor, port 10, not reversed
 pros::Rotation horizontal_rotation(10);
-// vertical tracking wheel encoder. Rotation sensor, port 11, reversed
+// vertical tracking wheel encoder. Rotation sensor, port 18, reversed
 pros::Rotation vertical_rotation(18);
 // horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -1);
+lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.5);
 // vertical tracking wheel. 2" diameter, 0.37" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, 0.0625);
+lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, 0);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              12.75, // 12.75 inch track width
+                              12.5, // 12.5 inch track width
                               lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
                               360, // drivetrain rpm is 360
-                              2 // horizontal drift is 2. If we had traction wheels, it would have been 8
+                              8 // horizontal drift is 2. If we had traction wheels, it would have been 8 // FOR NOW TRYING 8 since the video said it
 );
 
 // lateral PID controller
-lemlib::ControllerSettings lateralController(12.5, // proportional gain (kP)
+lemlib::ControllerSettings lateralController(11.5, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              49, // derivative gain (kD)
+                                              60, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds
@@ -110,9 +118,9 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
 );
 
 // sensors for odometry
-// Tracking center: (8,8.25)
-// Vertical Tracking Wheel Offset: 8-7.63 = 0.37 left of the tracking center (-0.37)
-// Horizontal Tracking Wheel Offset: 
+// Tracking center: (4,6.3125)
+// Vertical Tracking Wheel Offset: 6.3125-6.3125 = 0.000
+// Horizontal Tracking Wheel Offset: 4-(-1.5) = 5.5 (this value 5.5 should be negative since its at the back of the robot)
 
 
 lemlib::OdomSensors sensors(&vertical_wheel, // vertical tracking wheel
@@ -138,6 +146,7 @@ lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
 lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors, &throttleCurve, &steerCurve);
 
 
+
 // lvgl display (auton selector)
 void auton_button1Event(lv_event_t *e) {
     autonSelection = 1;
@@ -160,7 +169,7 @@ void lvgl_auton_button1(void) {
     lv_obj_add_event_cb(button1, auton_button1Event, LV_EVENT_ALL, NULL);
     lv_obj_t *button1_label = lv_label_create(button1);
     lv_label_set_text(button1_label, "Blue_Left_Auton");
-    lv_obj_align(button1, LV_ALIGN_LEFT_MID,0,0);
+    lv_obj_align(button1, LV_ALIGN_LEFT_MID,0,20);
 }
 
 void lvgl_auton_button2(void) {
@@ -175,7 +184,7 @@ void lvgl_auton_button3(void) {
     lv_obj_add_event_cb(button3, auton_button3Event, LV_EVENT_ALL, NULL);
     lv_obj_t *button3_label = lv_label_create(button3);
     lv_label_set_text(button3_label, "Red_Left_Auton");
-    lv_obj_align(button3, LV_ALIGN_RIGHT_MID, 0,0);
+    lv_obj_align(button3, LV_ALIGN_RIGHT_MID, 0,20);
 }
 void lvgl_auton_button4(void) {
     lv_obj_t *button4 = lv_button_create(lv_screen_active());
@@ -185,12 +194,39 @@ void lvgl_auton_button4(void) {
     lv_obj_align(button4, LV_ALIGN_BOTTOM_RIGHT,0,0);
 }
 
-void lvgl_label(void) {
-    lv_obj_t *label = lv_label_create(lv_screen_active());
-    lv_label_set_text(label, "Hello Auton Selector");
-    lv_obj_align(label,LV_ALIGN_CENTER,0,0);
+void verticalDisplacement_Label(void) {
+    vlabel = lv_label_create(lv_screen_active());
+    lv_obj_align(vlabel,LV_ALIGN_TOP_MID,0,40);
 }
-
+void horizontalDisplacement_Label(void) {
+    hlabel = lv_label_create(lv_screen_active());
+    lv_obj_align(hlabel,LV_ALIGN_TOP_MID,0,70);
+}
+void poseXY_Label(void) {
+    poseXYlabel = lv_label_create(lv_screen_active());
+    lv_obj_align(poseXYlabel,LV_ALIGN_TOP_MID,0,100);
+}
+void poseT_Label(void) {
+    poseTlabel = lv_label_create(lv_screen_active());
+    lv_obj_align(poseTlabel,LV_ALIGN_TOP_MID,0,120);
+}
+void update_VHP_Labels(void* param) {
+    while (true) {
+        if (vlabel != NULL) {
+            lv_label_set_text_fmt(vlabel, "Vertical Displacement: %i", vertical_rotation.get_position()/10);
+        }
+        if (hlabel != NULL) {
+            lv_label_set_text_fmt(hlabel, "Horizontal Displacement: %i", horizontal_rotation.get_position()/10);
+        }
+        if (poseXYlabel != NULL) {
+            lv_label_set_text_fmt(poseXYlabel, "Pose: (%i, %i)", (int)chassis.getPose().x, (int)chassis.getPose().y);
+        }
+        if (poseTlabel != NULL) {
+            lv_label_set_text_fmt(poseTlabel, "Theta: %i", (int)chassis.getPose().theta);
+        }
+        pros::delay(50);
+    }
+}
 void blue_left_auton() {
 
 }
@@ -204,13 +240,13 @@ void red_left_auton() {
 }
 
 void red_right_auton() {
-    //chassis.follow(red_right_auton_txt, 10, 4000);
+    //chassis.follow(red_right_auton_txt, 3, 4000);
 }
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
- * All other competition modes are blocked by initialize; it is recommended
+ * All other competition modes are blocked by initialize; it is reommended
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
@@ -223,27 +259,37 @@ void initialize() {
     void auton_button2Event();
     void auton_button3Event();
     void auton_button4Event();
-    void lvgl_label();
+    void verticalDisplacement_Label();
+    void horizontalDisplacement_Label();
+    void poseXY_Label();
+    void poseT_Label();
+    void update_VHP_Labels(void *param);
 
-    pros::lcd::initialize(); // initialize brain screen
-    chassis.calibrate();
+    pros::lcd::initialize();
+    chassis.calibrate(); // calibrate drivetrain, PID, sensors, controller steering
 
-    lv_obj_t * brain_screen = lv_obj_create(NULL);
-    lv_screen_load(brain_screen);
-
-    lvgl_label();
-    lvgl_auton_button1();
-    lvgl_auton_button2();
-    lvgl_auton_button3();
-    lvgl_auton_button4();
+    vertical_rotation.reset(); // reset vertical rotation sensor
+    horizontal_rotation.reset(); // reset horizontal rotation sensor
 
     while (imu.is_calibrating()) {
         pros::delay(10);
     }
 
+    lv_obj_t *brain_screen = lv_obj_create(NULL);
+    lv_screen_load(brain_screen);
 
-    //vertical_rotation.reset(); // reset vertical rotation sensor
-    //horizontal_rotation.reset(); // reset horizontal rotation sensor
+    verticalDisplacement_Label();
+    horizontalDisplacement_Label();
+    poseXY_Label();
+    poseT_Label();
+    lvgl_auton_button1();
+    lvgl_auton_button2();
+    lvgl_auton_button3();
+    lvgl_auton_button4();
+
+    // create a pros task that updates the vertical and horizontal rotation sensor measurements on the brain screen
+    pros::Task VHP_TASK(update_VHP_Labels,nullptr,(uint32_t)TASK_PRIORITY_DEFAULT,(uint16_t)TASK_STACK_DEPTH_DEFAULT);
+
     //chassis.calibrate(); // calibrate sensors
 
     // the default rate is 50. however, if you need to change the rate, you
@@ -252,6 +298,7 @@ void initialize() {
     // If you use bluetooth or a wired connection, you will want to have a rate of 10ms
 
     // for more information on how the formatting for the loggers
+
     // works, refer to the fmtlib docs
 
     // thread to for brain screen and position logging
@@ -313,7 +360,6 @@ void autonomous() {
     void auton_middleMotor();
     void auton_outtake();
 
-
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
@@ -324,7 +370,7 @@ void autonomous() {
     pros::Task intakeThread(auton_intake); // create a seperate thread for running intake/outtake/middle motors.
     pros::Task middleThread(auton_middleMotor);
     pros::Task outtakeThread(auton_outtake);
-    chassis.follow(red_right_auton_txt,10,4000);
+    chassis.follow(red_right_auton_txt,3,4000);
 
     intakeThread.remove(); // remove threads running intake/outtake/middle motors.
     middleThread.remove();
@@ -333,7 +379,7 @@ void autonomous() {
 
 
     // Angular PID Tuning 
-    //chassis.setPose(0, 0,0);
+    //chassis.setPose(0, 0, 0);
     //chassis.turnToHeading(90, 100000);
 
     // Lateral PID Tuning 
@@ -341,7 +387,7 @@ void autonomous() {
     chassis.moveToPoint(0, 20, 999999);
 
     // auton selector
-    switch (autonSelection) {
+    /*switch (autonSelection) {
         case 1:
             blue_left_auton();
             break;
@@ -354,16 +400,19 @@ void autonomous() {
         case 4:
             red_right_auton();
             break;
-    }
+    }*/
 }
 
+/**
+ * Runs during operator control
+ */
 
 void opcontrol() {
 
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
-    // fresh prototypes
+    // prototypes
     void intakeControl();
     void outtakeControl();
     void manual_colorSort();
@@ -402,6 +451,9 @@ void opcontrol() {
         // chassis.curvature(-rightX, -leftY, false);
         //chassis.arcade(-rightX, -leftY, false, .3);
         chassis.arcade(leftY, rightX, false, .3);
+
+        // update vertical displacement and horizontal displacement labels on brain screen (measured by rotation sensors)
+        //update_VHD_Labels();
 
         // intake and outtake control functions
         intakeControl();
@@ -471,12 +523,13 @@ void opcontrol() {
         // --------------------------------------------------------------------------------
 
         // delay to save resources
-        pros::delay(25);
+        lv_timer_handler();
+        pros::delay(30);
     }
 }
 
 
-// clean functions
+// functions
 
 void intake(int intakePower) {
     intakeMotor.move(intakePower);

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Testing",
+    "project_name": "Lemlib",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -635,9 +635,9 @@
       }
     },
     "upload_options": {
-      "slot": 1,
+      "slot": 6,
       "icon": "planet",
-      "description": "This is the drive program"
+      "description": "Shockwave Code"
     },
     "use_early_access": true
   }
