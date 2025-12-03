@@ -3,24 +3,19 @@
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "pros/misc.h"
 #include <cmath>
-#include "liblvgl/lvgl.h"
+#include "liblvgl/lvgl.h" // IWYU pragma: keep
 
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // lvgl
-// label to display vertical displacement and horizontal displacement
-lv_obj_t *vlabel = NULL; // vertical
-lv_obj_t *hlabel = NULL; // horizontal
 lv_obj_t *poseXYlabel = NULL; // x and y coords
 lv_obj_t *poseTlabel = NULL; // theta (direction robot is facing)
-// auton selector variable
 static int autonSelection = 0;
-
+static int colorSortMode = 0; // 0 for red, 1 for blue
 
 
 // motor groups
-
 /*
     Motor Layout:
         Left Side Motors:
@@ -90,13 +85,13 @@ lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               12.5, // 12.5 inch track width
                               lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
                               360, // drivetrain rpm is 360
-                              8 // horizontal drift is 2. If we had traction wheels, it would have been 8 // FOR NOW TRYING 8 since the video said it
+                              8 // horizontal drift is 2. If we had traction wheels, it would have been 8
 );
 
 // lateral PID controller
-lemlib::ControllerSettings lateralController(11.5, // proportional gain (kP)
+lemlib::ControllerSettings lateralController(13, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              60, // derivative gain (kD)
+                                              9, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds
@@ -148,76 +143,82 @@ lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensor
 
 
 // lvgl display (auton selector)
-void auton_button1Event(lv_event_t *e) {
+void blueLeft_ButtonEvent(lv_event_t *e) {
     autonSelection = 1;
 }
 
-void auton_button2Event(lv_event_t *e) {
+void blueRight_ButtonEvent(lv_event_t *e) {
     autonSelection = 2;
 }
 
-void auton_button3Event(lv_event_t *e) {
+void redLeft_ButtonEvent(lv_event_t *e) {
     autonSelection = 3;
 }
 
-void auton_button4Event(lv_event_t *e) {
+void redRight_ButtonEvent(lv_event_t *e) {
     autonSelection = 4;
 }
+void red_colorSort(lv_event_t *e) {
+    colorSortMode = 0;
+}
+void blue_colorSort(lv_event_t *e) {
+    colorSortMode = 1;
+}
 
-void lvgl_auton_button1(void) {
+void blueLeft_Button(void) {
     lv_obj_t *button1 = lv_button_create(lv_screen_active());
-    lv_obj_add_event_cb(button1, auton_button1Event, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(button1, blueLeft_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button1_label = lv_label_create(button1);
-    lv_label_set_text(button1_label, "Blue_Left_Auton");
-    lv_obj_align(button1, LV_ALIGN_LEFT_MID,0,20);
+    lv_label_set_text(button1_label, "Blue Left Auton");
+    lv_obj_align(button1, LV_ALIGN_LEFT_MID,0,0);
 }
 
-void lvgl_auton_button2(void) {
+void blueRight_Button(void) {
     lv_obj_t *button2 = lv_button_create(lv_screen_active());
-    lv_obj_add_event_cb(button2, auton_button2Event, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(button2, blueRight_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button2_label = lv_label_create(button2);
-    lv_label_set_text(button2_label, "Blue_Right_Auton");
-    lv_obj_align(button2, LV_ALIGN_BOTTOM_LEFT,0,0);
+    lv_label_set_text(button2_label, "Blue Right Auton");
+    lv_obj_align(button2, LV_ALIGN_LEFT_MID,0,30);
 }
-void lvgl_auton_button3(void) {
+void redLeft_Button(void) {
     lv_obj_t *button3 = lv_button_create(lv_screen_active());
-    lv_obj_add_event_cb(button3, auton_button3Event, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(button3, redLeft_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button3_label = lv_label_create(button3);
-    lv_label_set_text(button3_label, "Red_Left_Auton");
-    lv_obj_align(button3, LV_ALIGN_RIGHT_MID, 0,20);
+    lv_label_set_text(button3_label, "Red Left Auton");
+    lv_obj_align(button3, LV_ALIGN_RIGHT_MID, 0,0);
 }
-void lvgl_auton_button4(void) {
+void redRight_Button(void) {
     lv_obj_t *button4 = lv_button_create(lv_screen_active());
-    lv_obj_add_event_cb(button4, auton_button4Event, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(button4, redRight_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button4_label = lv_label_create(button4);
-    lv_label_set_text(button4_label, "Red_Right_Auton");
-    lv_obj_align(button4, LV_ALIGN_BOTTOM_RIGHT,0,0);
+    lv_label_set_text(button4_label, "Red Right Auton");
+    lv_obj_align(button4, LV_ALIGN_RIGHT_MID,0,30);
+}
+void redcolorSortButton(void) {
+    lv_obj_t *red_colorSortButton = lv_button_create(lv_screen_active());
+    lv_obj_add_event_cb(red_colorSortButton, red_colorSort, LV_EVENT_ALL, NULL);
+    lv_obj_t *redcolorSort_label = lv_label_create(red_colorSortButton);
+    lv_label_set_text(redcolorSort_label, "Red Color Sort");
+    lv_obj_align(red_colorSortButton, LV_ALIGN_BOTTOM_LEFT,0,0);   
+}
+void bluecolorSortButton(void) {
+    lv_obj_t *blue_colorSortButton = lv_button_create(lv_screen_active());
+    lv_obj_add_event_cb(blue_colorSortButton, blue_colorSort, LV_EVENT_ALL, NULL);
+    lv_obj_t *bluecolorSort_label = lv_label_create(blue_colorSortButton);
+    lv_label_set_text(bluecolorSort_label, "Blue Color Sort");
+    lv_obj_align(blue_colorSortButton, LV_ALIGN_BOTTOM_LEFT,0,0);   
 }
 
-void verticalDisplacement_Label(void) {
-    vlabel = lv_label_create(lv_screen_active());
-    lv_obj_align(vlabel,LV_ALIGN_TOP_MID,0,40);
-}
-void horizontalDisplacement_Label(void) {
-    hlabel = lv_label_create(lv_screen_active());
-    lv_obj_align(hlabel,LV_ALIGN_TOP_MID,0,70);
-}
 void poseXY_Label(void) {
     poseXYlabel = lv_label_create(lv_screen_active());
-    lv_obj_align(poseXYlabel,LV_ALIGN_TOP_MID,0,100);
+    lv_obj_align(poseXYlabel,LV_ALIGN_TOP_MID,0,0);
 }
 void poseT_Label(void) {
     poseTlabel = lv_label_create(lv_screen_active());
-    lv_obj_align(poseTlabel,LV_ALIGN_TOP_MID,0,120);
+    lv_obj_align(poseTlabel,LV_ALIGN_TOP_MID,0,30);
 }
 void update_VHP_Labels(void* param) {
     while (true) {
-        if (vlabel != NULL) {
-            lv_label_set_text_fmt(vlabel, "Vertical Displacement: %i", vertical_rotation.get_position()/10);
-        }
-        if (hlabel != NULL) {
-            lv_label_set_text_fmt(hlabel, "Horizontal Displacement: %i", horizontal_rotation.get_position()/10);
-        }
         if (poseXYlabel != NULL) {
             lv_label_set_text_fmt(poseXYlabel, "Pose: (%i, %i)", (int)chassis.getPose().x, (int)chassis.getPose().y);
         }
@@ -240,7 +241,7 @@ void red_left_auton() {
 }
 
 void red_right_auton() {
-    //chassis.follow(red_right_auton_txt, 3, 4000);
+    //chassis.follow(red_right_txt, 3, 4000,true,false);
 }
 
 /**
@@ -251,22 +252,24 @@ void red_right_auton() {
  */
 void initialize() {
 
-    void lvgl_auton_button1();
-    void lvgl_auton_button2();
-    void lvgl_auton_button3();
-    void lvgl_auton_button4();
-    void auton_button1Event();
-    void auton_button2Event();
-    void auton_button3Event();
-    void auton_button4Event();
-    void verticalDisplacement_Label();
-    void horizontalDisplacement_Label();
+    /*void blueLeft_Button();
+    void blueRight_Button();
+    void redLeft_Button();
+    void redRight_Button();
+    void red_colorSort();
+    void blue_colorSort();
+    void blueLeft_ButtonEvent();
+    void blueRight_ButtonEvent();
+    void redLeft_ButtonEvent();
+    void blueRight_ButtonEvent();
+    void redcolorSortButton();
+    void bluecolorSortButton();
     void poseXY_Label();
     void poseT_Label();
-    void update_VHP_Labels(void *param);
+    void update_VHP_Labels(void *param);*/
 
     pros::lcd::initialize();
-    chassis.calibrate(); // calibrate drivetrain, PID, sensors, controller steering
+    chassis.calibrate(); // calibrate drivetrain, odometry, PID, sensors, controller steering
 
     vertical_rotation.reset(); // reset vertical rotation sensor
     horizontal_rotation.reset(); // reset horizontal rotation sensor
@@ -278,14 +281,14 @@ void initialize() {
     lv_obj_t *brain_screen = lv_obj_create(NULL);
     lv_screen_load(brain_screen);
 
-    verticalDisplacement_Label();
-    horizontalDisplacement_Label();
     poseXY_Label();
     poseT_Label();
-    lvgl_auton_button1();
-    lvgl_auton_button2();
-    lvgl_auton_button3();
-    lvgl_auton_button4();
+    blueLeft_Button();
+    blueRight_Button();
+    redLeft_Button();
+    redRight_Button();
+    bluecolorSortButton();
+    redcolorSortButton();
 
     // create a pros task that updates the vertical and horizontal rotation sensor measurements on the brain screen
     pros::Task VHP_TASK(update_VHP_Labels,nullptr,(uint32_t)TASK_PRIORITY_DEFAULT,(uint16_t)TASK_STACK_DEPTH_DEFAULT);
@@ -332,22 +335,8 @@ void competition_initialize() {}
 
 // get a path used for pure pursuit
 // this needs to be put outside a function
-ASSET(red_right_auton_txt); // '.' replaced with "_" to make c++ happy
-ASSET(section_one_txt);
-
-
-
-// motor functions on a seperate thread for autonomous period
-void auton_intake() {
-    intakeMotor.move(127);
-}
-void auton_middleMotor() {
-    middletakeMotor.move(127);
-}
-void auton_outtake() {
-    outtakeMotor.move(127);
-}
-// ----------------------------------------------------------
+ASSET(red_right_txt); // '.' replaced with "_" to make c++ happy
+ASSET(red_right_a_txt);
 
 
 /**
@@ -355,36 +344,29 @@ void auton_outtake() {
  */
 void autonomous() {
 
-    // function prototypes
-    void auton_intake();
-    void auton_middleMotor();
-    void auton_outtake();
-
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 
-    /*
+    
     // auton code so far
-    chassis.setPose(-50.66,-11.383,113);
-    pros::Task intakeThread(auton_intake); // create a seperate thread for running intake/outtake/middle motors.
-    pros::Task middleThread(auton_middleMotor);
-    pros::Task outtakeThread(auton_outtake);
-    chassis.follow(red_right_auton_txt,3,4000);
-
-    intakeThread.remove(); // remove threads running intake/outtake/middle motors.
-    middleThread.remove();
-    outtakeThread.remove();
-    */
+    intakeMotor.move(127);
+    sortMotor.move(127);
+    outtakeMotor.move(-127);
+    chassis.setPose(-59.474,-12.413,0);
+    chassis.follow(red_right_a_txt,10,4000,true,false);
+    // chassis.moveToPoint(-22.042,-22.601,7000);
+    
+    
 
 
     // Angular PID Tuning 
-    //chassis.setPose(0, 0, 0);
-    //chassis.turnToHeading(90, 100000);
+    // chassis.setPose(0, 0, 0);
+    // chassis.turnToHeading(180, 100000);
 
     // Lateral PID Tuning 
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(0, 20, 999999);
+    //chassis.setPose(0, 0, 0);
+    //chassis.moveToPoint(0, 20, 999999);
 
     // auton selector
     /*switch (autonSelection) {
@@ -417,7 +399,7 @@ void opcontrol() {
     void outtakeControl();
     void manual_colorSort();
     void red_colorSort(int sortMode, int distance, double hue);
-    // void blue_colorSort(int sortMode, int distance, double hue);
+    void blue_colorSort(int sortMode, int distance, double hue);
     void antiJamControl(bool antiJamButtonPressed, bool isOurBlock);
 
     // matchloadPiston variables
@@ -475,8 +457,12 @@ void opcontrol() {
 
 
         // color sorting functions ------------
-        red_colorSort(sortMode, distance, hue);
-        // blueSort(sortMode, distance, hue);
+        if (colorSortMode == 0) {
+            red_colorSort(sortMode, distance, hue);
+        }
+        else if (colorSortMode == 1) {
+            blue_colorSort(sortMode, distance, hue);
+        }
         // manual_colorSort();
 
 
