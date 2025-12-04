@@ -170,7 +170,7 @@ void blueLeft_Button(void) {
     lv_obj_add_event_cb(button1, blueLeft_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button1_label = lv_label_create(button1);
     lv_label_set_text(button1_label, "Blue Left Auton");
-    lv_obj_align(button1, LV_ALIGN_LEFT_MID,0,0);
+    lv_obj_align(button1, LV_ALIGN_TOP_LEFT,0,80);
 }
 
 void blueRight_Button(void) {
@@ -178,44 +178,44 @@ void blueRight_Button(void) {
     lv_obj_add_event_cb(button2, blueRight_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button2_label = lv_label_create(button2);
     lv_label_set_text(button2_label, "Blue Right Auton");
-    lv_obj_align(button2, LV_ALIGN_LEFT_MID,0,30);
+    lv_obj_align(button2, LV_ALIGN_TOP_RIGHT,0,30);
 }
 void redLeft_Button(void) {
     lv_obj_t *button3 = lv_button_create(lv_screen_active());
     lv_obj_add_event_cb(button3, redLeft_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button3_label = lv_label_create(button3);
     lv_label_set_text(button3_label, "Red Left Auton");
-    lv_obj_align(button3, LV_ALIGN_RIGHT_MID, 0,0);
+    lv_obj_align(button3, LV_ALIGN_TOP_LEFT, 0,30);
 }
 void redRight_Button(void) {
     lv_obj_t *button4 = lv_button_create(lv_screen_active());
     lv_obj_add_event_cb(button4, redRight_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button4_label = lv_label_create(button4);
     lv_label_set_text(button4_label, "Red Right Auton");
-    lv_obj_align(button4, LV_ALIGN_RIGHT_MID,0,30);
+    lv_obj_align(button4, LV_ALIGN_TOP_RIGHT,0,80);
 }
 void redcolorSortButton(void) {
     lv_obj_t *red_colorSortButton = lv_button_create(lv_screen_active());
     lv_obj_add_event_cb(red_colorSortButton, red_colorSort, LV_EVENT_ALL, NULL);
     lv_obj_t *redcolorSort_label = lv_label_create(red_colorSortButton);
     lv_label_set_text(redcolorSort_label, "Red Color Sort");
-    lv_obj_align(red_colorSortButton, LV_ALIGN_BOTTOM_LEFT,0,0);   
+    lv_obj_align(red_colorSortButton, LV_ALIGN_BOTTOM_MID,0,-60);   
 }
 void bluecolorSortButton(void) {
     lv_obj_t *blue_colorSortButton = lv_button_create(lv_screen_active());
     lv_obj_add_event_cb(blue_colorSortButton, blue_colorSort, LV_EVENT_ALL, NULL);
     lv_obj_t *bluecolorSort_label = lv_label_create(blue_colorSortButton);
     lv_label_set_text(bluecolorSort_label, "Blue Color Sort");
-    lv_obj_align(blue_colorSortButton, LV_ALIGN_BOTTOM_LEFT,0,0);   
+    lv_obj_align(blue_colorSortButton, LV_ALIGN_BOTTOM_MID,0,-10);
 }
 
 void poseXY_Label(void) {
     poseXYlabel = lv_label_create(lv_screen_active());
-    lv_obj_align(poseXYlabel,LV_ALIGN_TOP_MID,0,0);
+    lv_obj_align(poseXYlabel,LV_ALIGN_TOP_MID,0,30);
 }
 void poseT_Label(void) {
     poseTlabel = lv_label_create(lv_screen_active());
-    lv_obj_align(poseTlabel,LV_ALIGN_TOP_MID,0,30);
+    lv_obj_align(poseTlabel,LV_ALIGN_TOP_MID,0,60);
 }
 void update_VHP_Labels(void* param) {
     while (true) {
@@ -353,8 +353,8 @@ void autonomous() {
     intakeMotor.move(127);
     sortMotor.move(127);
     outtakeMotor.move(-127);
-    chassis.setPose(-59.474,-12.413,0);
-    chassis.follow(red_right_a_txt,10,4000,true,false);
+    chassis.setPose(-51.804,-10.238,115);
+    chassis.follow(red_right_txt,3,4000,true,false);
     // chassis.moveToPoint(-22.042,-22.601,7000);
     
     
