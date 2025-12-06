@@ -28,6 +28,9 @@ pros::Motor middletakeMotor(9, pros::v5::MotorGears::green); // middletake motor
 pros::Imu imu(16); // Inertial Sensor on port 16
 pros::Optical colorSensor(19); // Optical Sensor on port 19
 pros::Distance distanceSensor(14); // Distance Sensor on port 14
+pros::Distance LeftDistanceSensor(16);
+pros::Distance RightDistanceSensor(13); 
+pros::Distance BackDistanceSensor(17);
 
 // Pneumatics
 pros::adi::Pneumatics matchLoad('A', false); // Matchload Pneumatics on port A

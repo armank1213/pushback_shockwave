@@ -25,6 +25,10 @@ extern pros::Motor middletakeMotor;
 extern pros::Imu imu;
 extern pros::Optical colorSensor;
 extern pros::Distance distanceSensor;
+extern pros::Distance LeftDistanceSensor;
+extern pros::Distance RightDistanceSensor;
+extern pros::Distance BackDistanceSensor;
+
 
 // Pneumatics
 extern pros::adi::Pneumatics matchLoad;

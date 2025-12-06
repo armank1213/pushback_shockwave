@@ -33,6 +33,8 @@ void blue_colorSort(int sortMode, int distance, double hue) {
     }
 }
 
+
+// Will be implemented in the future for s bot 
 void antiJamControl(bool antiJamButtonPressed, bool isOurBlock) {
     static int lastToggleTime = 0;
     static int direction = 1;

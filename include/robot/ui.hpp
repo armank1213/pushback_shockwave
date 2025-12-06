@@ -1,7 +1,7 @@
 #pragma once
 
-#include "liblvgl/lvgl.h"
-#include "robot/chassis_config.hpp"
+#include "liblvgl/lvgl.h" // IWYU pragma: keep
+#include "robot/chassis_config.hpp" // IWYU pragma: keep
 
 // UI state variables
 extern int autonSelection;

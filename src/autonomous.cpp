@@ -1,7 +1,7 @@
 #include "robot/autonomous.hpp"
-#include "robot/chassis_config.hpp"
-#include "robot/hardware.hpp"
-#include "robot/motors.hpp"
+#include "robot/chassis_config.hpp" // IWYU pragma: keep
+#include "robot/hardware.hpp" // IWYU pragma: keep
+#include "robot/motors.hpp" // IWYU pragma: keep
 #include "lemlib/asset.hpp"
 
 // Get paths used for pure pursuit
