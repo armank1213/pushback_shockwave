@@ -26,12 +26,7 @@ void blue_right_auton() {
 
 void red_left_auton() {
     // TODO: Implement red left autonomous
-}
-
-void red_right_auton() {
-    //chassis.follow(red_right_txt, 3, 4000,true,false);
-    // TODO: Implement red right autonomous
-
+    // have to change this
     while (true) {
         pros::Task updatePoseTask(newPose,nullptr,(uint32_t)TASK_PRIORITY_DEFAULT,(uint16_t)TASK_STACK_DEPTH_DEFAULT);
     }
@@ -56,5 +51,50 @@ void red_right_auton() {
     //chassis.move(0,-60,1000);
     //chassis.moveToHeading(60,1000,{.minSpeed=50, .earlyExitRange=2});
     //
+
+}
+
+void red_right_auton() {
+    //chassis.follow(red_right_txt, 3, 4000,true,false);
+    // TODO: Implement red right autonomous
+
+    // Time Tracking
+    double startTime = pros::millis();
+    chassis.setPose(0, 0, 115);
+
+    intake(127); 
+    outtake(127);
+    chassis.moveToPoint(-22.131, -24.413, 1000, {.maxSpeed=100, .minSpeed=20});
+    pros::delay(1000);
+    chassis.turnToPoint(-7.051, -6.814, 1000, {.maxSpeed=75, .minSpeed=20, .earlyExitRange=5});
+    chassis.moveToPoint(-7.051, -6.814, 1000, {.maxSpeed=60, .minSpeed=20});
+    intake(0);
+    outtake(0);
+
+    outtake(-127);
+    intake(-127);
+    pros::delay(2000);
+    intake(0);
+    outtake(0);
+
+    chassis.moveToPoint(-48.593, -46.693, 1000, {.maxSpeed=100, .minSpeed=20});
+    chassis.turnToPoint(-62.604, -47.387, 1000, {.maxSpeed=75, .minSpeed=20, .earlyExitRange=5});
+
+    intake(127);
+    outtake(127);
+    matchloadToggle();
+    chassis.moveToPoint(-62.604, -47.387, 1000, {.maxSpeed=50, .minSpeed=20});
+    pros::delay(2500);
+    intake(0);
+    outtake(0);
+    
+    chassis.moveToPoint(-27.508, -47.61, 1000, {.maxSpeed=100, .minSpeed=20});
+    matchloadToggle();
+    limiterToggle();
+    outtake(127);
+    pros::delay(3000);
+
+    controller.print(0,0,"Auton Time: %.2f", (pros::millis() - startTime)/1000);
+
 }
 

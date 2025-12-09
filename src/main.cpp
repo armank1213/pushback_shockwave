@@ -95,7 +95,7 @@ void opcontrol() {
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
     // Matchload piston variables
-    bool matchloadPistonToggle = false;
+    bool matchloadTogle = false;
     static bool lastAButtonState = false;
 
     // Limiter piston variables
@@ -148,21 +148,10 @@ void opcontrol() {
         }
 
         // Matchload Pneumatics Toggle
-        bool currentA = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
-        if (currentA && !lastAButtonState) {
-            matchloadPistonToggle = !matchloadPistonToggle;
-            matchLoad.set_value(matchloadPistonToggle);
-        }
-        lastAButtonState = currentA;
+        matchloadToggle();
 
         // Limiter Pneumatics Toggle
-        bool currentY = controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
-
-        if (currentY && !lastYButtonState) {
-            limiterPistonToggle = !limiterPistonToggle;
-            limiter.set_value(limiterPistonToggle);
-        }
-        lastYButtonState = currentY;
+        limiterToggle();
 
         // Wing Mech Pneumatics Toggle
         bool currentX = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);

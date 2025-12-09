@@ -11,3 +11,7 @@ void intakeControl();
 void outtakeControl();
 void manual_colorSort();
 
+// pneumatics functions
+void matchloadToggle();
+void limiterToggle();
+void wingToggle();
