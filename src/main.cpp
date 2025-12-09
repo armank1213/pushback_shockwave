@@ -32,14 +32,14 @@ void initialize() {
     initializeUI();
 
     // Thread for brain screen and position logging
-    pros::Task screenTask([&]() {
+    /*pros::Task screenTask([&]() {
         while (true) {
             // Log position telemetry
             lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
             // Delay to save resources
             pros::delay(50);
         }
-    });
+    });*/
 }
 
 /**
@@ -59,18 +59,19 @@ void autonomous() {
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-    // Run intake/sort/outtake while chassis is in motion
+    red_right_auton();
+    /*// Run intake/sort/outtake while chassis is in motion
     while (chassis.isInMotion()) {
         intakeMotor.move(127);
         sortMotor.move(127);
         outtakeMotor.move(-127);
-    }
+    }*/
 
     // Set initial pose
-    chassis.setPose(-54.422, -9.185, 0);
+    //chassis.setPose(-54.422, -9.185, 0);
 
     // Auton selector
-    switch (autonSelection) {
+    /*switch (autonSelection) {
         case 1:
             blue_left_auton();
             break;
@@ -87,7 +88,7 @@ void autonomous() {
             // Default autonomous (currently red right)
             red_right_auton();
             break;
-    }
+    }*/
 }
 
 void opcontrol() {
