@@ -51,7 +51,7 @@ double y_prev = y;
 
 const double WHEEL_CIRCUMFERENCE = Omniwheel::NEW_2 * M_PI; // mm
 
-void reset_distance() {
+std::pair<double, double> reset_distance() {
 
     while (true) {
 
@@ -94,6 +94,8 @@ void reset_distance() {
         
         x_prev = x;
         y_prev = y;
+
+        return {x,y};
 
         pros::delay(20);
     }

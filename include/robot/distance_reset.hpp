@@ -7,6 +7,4 @@
 
 double angle_error(double angle_a, double angle_b);
 
-void reset_distance();
-
-
+std::pair<double,double> reset_distance();
