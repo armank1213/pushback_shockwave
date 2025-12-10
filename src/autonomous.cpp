@@ -82,15 +82,15 @@ void red_right_auton() {
 
     intake(127);
     outtake(127);
-    matchloadToggle();
+    matchLoad.set_value(1);
     chassis.moveToPoint(-62.604, -47.387, 1000, {.maxSpeed=50, .minSpeed=20});
     pros::delay(2500);
     intake(0);
     outtake(0);
     
     chassis.moveToPoint(-27.508, -47.61, 1000, {.maxSpeed=100, .minSpeed=20});
-    matchloadToggle();
-    limiterToggle();
+    matchLoad.set_value(0);
+    limiter.set_value(0);
     outtake(127);
     pros::delay(3000);
 
