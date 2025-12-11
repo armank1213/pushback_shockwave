@@ -34,7 +34,7 @@ pros::Distance BackDistanceSensor(17);
 
 // Pneumatics
 pros::adi::Pneumatics matchLoad('A', false); // Matchload Pneumatics on port A
-pros::adi::Pneumatics limiter('G', true); // Limiter Pneumatics on port G
+pros::adi::Pneumatics limiter('E', true); // Limiter Pneumatics on port G
 pros::adi::Pneumatics wing('C', false); // Wing Pneumatics on port C
 
 // Tracking Wheels

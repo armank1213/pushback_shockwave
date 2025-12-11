@@ -154,13 +154,7 @@ void opcontrol() {
         limiterToggle();
 
         // Wing Mech Pneumatics Toggle
-        bool currentX = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
-        
-        if (currentX && !lastXButtonState) {
-            wingPistonToggle = !wingPistonToggle;
-            wing.set_value(wingPistonToggle);
-        }
-        lastXButtonState = currentX;
+        wingToggle();
 
         // Logic for anti-jam control
         if (distance < 135) {
