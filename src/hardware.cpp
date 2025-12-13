@@ -34,8 +34,8 @@ pros::Distance BackDistanceSensor(17);
 
 // Pneumatics
 pros::adi::Pneumatics matchLoad('A', false); // Matchload Pneumatics on port A
-pros::adi::Pneumatics limiter('E', true); // Limiter Pneumatics on port G
-pros::adi::Pneumatics wing('C', false); // Wing Pneumatics on port C
+pros::adi::Pneumatics limiter('C', false); // Limiter Pneumatics on port G
+pros::adi::Pneumatics wing('E', false); // Wing Pneumatics on port C
 
 // Tracking Wheels
 // Horizontal tracking wheel encoder. Rotation sensor, port 10, not reversed

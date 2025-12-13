@@ -17,7 +17,18 @@ void newPose(void* param) {
 }
 
 void blue_left_auton() {
-    // TODO: Implement blue left autonomous
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPose(-5, 20, 0, 1000, {.forwards=true, .lead=0.4, .maxSpeed=65});
+    chassis.moveToPose(-12, 42, 0, 3000, {.forwards=true, .lead=0, .maxSpeed=65});
+    intake(127);
+    sort(127);
+    outtake(127);
+    chassis.moveToPose(5, 45, 45, 2500, {.forwards=true, .lead=0.0, .maxSpeed=55});
+    pros::delay(2000);
+    outtake(-127);
+    sort(-127);
+    middleTake(-127);
+    pros::delay(2500);
 }
 
 void blue_right_auton() {
@@ -25,76 +36,36 @@ void blue_right_auton() {
 }
 
 void red_left_auton() {
-    // TODO: Implement red left autonomous
-    // have to change this
-    while (true) {
-        pros::Task updatePoseTask(newPose,nullptr,(uint32_t)TASK_PRIORITY_DEFAULT,(uint16_t)TASK_STACK_DEPTH_DEFAULT);
-    }
 
-    intakeMotor.move(127);
-    sortMotor.move(127);
-    middletakeMotor.move(127);
-    outtakeMotor.move(-127);
+    chassis.setPose(0, 0, 0);
+    // used to be chassis.moveToPose(-5, 20, 0, 1000, {.forwards=true, .lead=0.4, .maxSpeed=65});
     
-    chassis.setPose(0,0,0);
-    chassis.moveToPoint(0,30,1000);
-    chassis.turnToHeading(-60,1000, {.minSpeed=50, .earlyExitRange=2});
-    //chassis.moveToPoint(0,15,1000);
-    //intakeMotor.move(-127);
-    //sortMotor.move(-127);
-    //middletakeMotor.move(-127);
-    //outtakeMotor.move(-127);
-    //pros::delay(2000);
-    //intakeMotor.stop();
-    //sortMotor.stop();
-    //middletakeMotor.stop();
-    //chassis.move(0,-60,1000);
-    //chassis.moveToHeading(60,1000,{.minSpeed=50, .earlyExitRange=2});
-    //
+    chassis.moveToPose(-15, 18, 0, 1000, {.forwards=true, .lead=.3, .maxSpeed=60});
+    chassis.moveToPose(-20, 37, 0, 3000, {.forwards=true, .lead=.1, .maxSpeed=80});
+    sort(127);
+    outtake(-127);
+    middleTake(127);
+    pros::delay(2000);
+    outtake(127);
+    sort(-127);
+    middleTake(-127);
+    pros::delay(2000);
+
+    /*chassis.moveToPose(-25,4.5,135,3500, {.forwards=false, .lead=0, .maxSpeed=110});
+    matchLoad.set_value(1);
+    sort(127);
+    middleTake(127);
+    outtake(127);
+    chassis.moveToPose(-25,-10.5,0,2200, {.forwards=true, .lead=0, .maxSpeed=90});
+    pros::delay(2500);
+    chassis.moveToPose(-25,-24,0,2200, {.forwards=false, .lead=0, .maxSpeed=110});*/
+
+    
+
 
 }
 
 void red_right_auton() {
-    //chassis.follow(red_right_txt, 3, 4000,true,false);
-    // TODO: Implement red right autonomous
-
-    // Time Tracking
-    double startTime = pros::millis();
-    chassis.setPose(0, 0, 115);
-
-    intake(127); 
-    outtake(127);
-    chassis.moveToPoint(-22.131, -24.413, 1000, {.maxSpeed=100, .minSpeed=20});
-    pros::delay(1000);
-    chassis.turnToPoint(-7.051, -6.814, 1000, {.maxSpeed=75, .minSpeed=20, .earlyExitRange=5});
-    chassis.moveToPoint(-7.051, -6.814, 1000, {.maxSpeed=60, .minSpeed=20});
-    intake(0);
-    outtake(0);
-
-    outtake(-127);
-    intake(-127);
-    pros::delay(2000);
-    intake(0);
-    outtake(0);
-
-    chassis.moveToPoint(-48.593, -46.693, 1000, {.maxSpeed=100, .minSpeed=20});
-    chassis.turnToPoint(-62.604, -47.387, 1000, {.maxSpeed=75, .minSpeed=20, .earlyExitRange=5});
-
-    intake(127);
-    outtake(127);
-    matchLoad.set_value(1);
-    chassis.moveToPoint(-62.604, -47.387, 1000, {.maxSpeed=50, .minSpeed=20});
-    pros::delay(2500);
-    intake(0);
-    outtake(0);
-    
-    chassis.moveToPoint(-27.508, -47.61, 1000, {.maxSpeed=100, .minSpeed=20});
-    matchLoad.set_value(0);
-    limiter.set_value(0);
-    outtake(127);
-    pros::delay(3000);
-
-    controller.print(0,0,"Auton Time: %.2f", (pros::millis() - startTime)/1000);
 
 }
 

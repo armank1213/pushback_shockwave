@@ -71,7 +71,7 @@ void intakeControl() {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
         intake(127);
     }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
         intake(-127);
     }
     else {
@@ -80,7 +80,7 @@ void intakeControl() {
 }
 
 void outtakeControl() {
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
         outtake(127);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {

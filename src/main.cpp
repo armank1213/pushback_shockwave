@@ -59,35 +59,7 @@ void autonomous() {
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-    // Run intake/sort/outtake while chassis is in motion
-    while (chassis.isInMotion()) {
-        intakeMotor.move(127);
-        sortMotor.move(127);
-        outtakeMotor.move(-127);
-    }
-
-    // Set initial pose
-    chassis.setPose(-54.422, -9.185, 0);
-
-    // Auton selector
-    switch (autonSelection) {
-        case 1:
-            blue_left_auton();
-            break;
-        case 2:
-            blue_right_auton();
-            break;
-        case 3:
-            red_left_auton();
-            break;
-        case 4:
-            red_right_auton();
-            break;
-        default:
-            // Default autonomous (currently red right)
-            red_right_auton();
-            break;
-    }
+    red_left_auton();
 }
 
 void opcontrol() {
