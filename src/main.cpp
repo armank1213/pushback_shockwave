@@ -116,7 +116,7 @@ void opcontrol() {
         }*/
         
         //blue_colorSort(distance, hue);
-       red_colorSort(distance, hue);
+        red_colorSort(distance, hue);
 
         // Matchload Pneumatics Toggle
         matchloadToggle();
