@@ -20,6 +20,14 @@ void sort(int sortPower) {
     sortMotor.move(sortPower);
 }
 
+void fullMotorControl() {
+    fullMotor.move(-127);
+}
+
+void halfMotorControl() {
+    halfMotor.move(-127);
+}
+
 void matchloadToggle() {
 
     // Matchload piston variables
@@ -71,7 +79,7 @@ void intakeControl() {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
         intake(127);
     }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // R2 for chey, L2 for naman
         intake(-127);
     }
     else {
@@ -80,10 +88,10 @@ void intakeControl() {
 }
 
 void outtakeControl() {
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
         outtake(127);
     }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // L2 for chey, R2 for namna
         outtake(-127);
     }
     else {

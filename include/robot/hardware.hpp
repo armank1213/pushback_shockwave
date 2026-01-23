@@ -21,6 +21,9 @@ extern pros::Motor intakeMotor;
 extern pros::Motor sortMotor;
 extern pros::Motor middletakeMotor;
 
+extern pros::Motor fullMotor;
+extern pros::Motor halfMotor;
+
 // Sensors
 extern pros::Imu imu;
 extern pros::Optical colorSensor;

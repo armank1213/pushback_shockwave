@@ -59,6 +59,7 @@ void autonomous() {
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
+
     red_left_auton();
 }
 
@@ -102,22 +103,20 @@ void opcontrol() {
         colorSensor.set_led_pwm(100);
         int distance = distanceSensor.get_distance();
         double hue = colorSensor.get_hue();
+        
+        fullMotorControl();
+        halfMotorControl();
 
-        // Logic for sorting mode toggle
-        bool CurrentB_ButtonState = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
-
-        if (CurrentB_ButtonState && !LastB_ButtonState) {
-            sortMode = 1 - sortMode;
-        }
-        LastB_ButtonState = CurrentB_ButtonState;
-
-        // Color sorting functions
+        /*// Color sorting functions
         if (colorSortMode == 0) {
             red_colorSort(sortMode, distance, hue);
         }
         else if (colorSortMode == 1) {
             blue_colorSort(sortMode, distance, hue);
-        }
+        }*/
+        
+        //blue_colorSort(distance, hue);
+       red_colorSort(distance, hue);
 
         // Matchload Pneumatics Toggle
         matchloadToggle();

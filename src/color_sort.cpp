@@ -3,30 +3,26 @@
 #include "robot/hardware.hpp"
 #include <cstdlib>
 
-void red_colorSort(int sortMode, int distance, double hue) {
+void red_colorSort(int distance, double hue) {
     if (distance < 95) { // if an object is detected within 95 mm
-        if (sortMode == 0) { 
             if ((hue >= 0 && hue <= 30)) {
                 sort(127);
             } else if (hue >= 220 && hue <= 360) {
                 sort(-127);
             }
-        }
     }
     else {
         sort(0);
     }
 }
 
-void blue_colorSort(int sortMode, int distance, double hue) {
+void blue_colorSort(int distance, double hue) {
     if (distance < 95) { // if an object is detected within 95 mm
-        if (sortMode == 0) { 
             if ((hue >= 220 && hue <= 360)) {
                 sort(127);
             } else if (hue >= 0 && hue <= 30) {
                 sort(-127);
             }
-        }
     }
     else {
         sort(0);

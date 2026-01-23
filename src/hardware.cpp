@@ -20,9 +20,12 @@ pros::MotorGroup rightMotors({-11, 12, 7}, pros::MotorGearset::green);
 
 // Individual Motors
 pros::Motor outtakeMotor(15, pros::v5::MotorGears::green); // outtake motor on port 15
-pros::Motor intakeMotor(2, pros::v5::MotorGears::green); // intake motor on port 2
-pros::Motor sortMotor(1, pros::v5::MotorGears::green); // sorting motor on port 1
+pros::Motor intakeMotor(20, pros::v5::MotorGears::green); // intake motor on port 2
+pros::Motor sortMotor(21, pros::v5::MotorGears::green); // sorting motor on port 1
 pros::Motor middletakeMotor(9, pros::v5::MotorGears::green); // middletake motor on port 9
+
+pros::Motor fullMotor(1, pros::v5::MotorGears::blue);
+pros::Motor halfMotor(2, pros::v5::MotorGears::green);
 
 // Sensors
 pros::Imu imu(16); // Inertial Sensor on port 16
