@@ -6,6 +6,7 @@
 // UI state variables
 extern int autonSelection;
 extern int colorSortMode;
+extern int driver;
 
 // UI label objects
 extern lv_obj_t *poseXYlabel;

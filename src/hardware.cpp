@@ -5,7 +5,7 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // Motor Groups
 /*
-    Motor Layout:
+    L-Bot Motor Layout:
         Left Side Motors:
             - Port 6 = Front Motor
             - Port 5 = Reversed Motor (Top Stack Motor)
@@ -14,6 +14,16 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
             - Port 11 = Reversed Motor (Top Stack Motor)
             - Port 12 = Bottom Stack Motor
             - Port 7 = Front Motor
+
+    S-Bot Motor Layout:
+        Left Side Motors:
+            - Port 6 = Front Motor
+            - Port 5 = Middle Motor
+            - Port 4 = Back Motor (Vertical)
+        Right Side Motors:
+            - Port 11 = Front Motor
+            - Port 12 = Middle Motor
+            - Port 7 = Back Motor (Vertical)
 */
 pros::MotorGroup leftMotors({-6, 5, -4}, pros::MotorGearset::green);
 pros::MotorGroup rightMotors({-11, 12, 7}, pros::MotorGearset::green);

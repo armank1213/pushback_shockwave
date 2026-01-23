@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Lemlib",
+    "project_name": "sssbot",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -635,9 +635,9 @@
       }
     },
     "upload_options": {
-      "slot": 6,
-      "icon": "planet",
-      "description": "Shockwave Code"
+      "slot": 1,
+      "icon": "pizza",
+      "description": "new lemlib development"
     },
     "use_early_access": true
   }

@@ -1,6 +1,6 @@
 #pragma once 
 
-// Basic motor control functions
+// Basic motor movement functions
 void intake(int intakePower);
 void outtake(int outtakePower);
 void middleTake(int middlePower);
@@ -9,9 +9,6 @@ void sort(int sortPower);
 // Control functions
 void intakeControl();
 void outtakeControl();
-void manual_colorSort();
 
-// pneumatics functions
-void matchloadToggle();
-void limiterToggle();
-void wingToggle();
+// antiJam control function
+void antiJamControl(bool antiJamButtonPressed, bool isOurBlock);

@@ -5,9 +5,10 @@
 #include "robot/autonomous.hpp"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "pros/rtos.hpp"
-#include "robot/distance_reset.hpp" // IWYU pragma: keep
-#include "robot/motors.hpp" 
+#include "robot/auton_helpers.hpp"// IWYU pragma: keep
+#include "robot/motors.hpp"
 #include "robot/color_sort.hpp" 
+#include "robot/pneumatics.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -63,6 +64,7 @@ void autonomous() {
 }
 
 void opcontrol() {
+    
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
@@ -77,10 +79,6 @@ void opcontrol() {
     // Wing piston variables
     bool wingPistonToggle = false;
     static bool lastXButtonState = false;
-
-    // Color sorting variables
-    static int sortMode = 0;
-    static bool LastB_ButtonState = false;
 
     // Anti-jam control variables
     const bool allianceColor = true; // true for red, false for blue
@@ -103,20 +101,15 @@ void opcontrol() {
         int distance = distanceSensor.get_distance();
         double hue = colorSensor.get_hue();
 
-        // Logic for sorting mode toggle
-        bool CurrentB_ButtonState = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
-
-        if (CurrentB_ButtonState && !LastB_ButtonState) {
-            sortMode = 1 - sortMode;
-        }
-        LastB_ButtonState = CurrentB_ButtonState;
-
         // Color sorting functions
         if (colorSortMode == 0) {
-            red_colorSort(sortMode, distance, hue);
+            red_colorSort(distance, hue);
         }
         else if (colorSortMode == 1) {
-            blue_colorSort(sortMode, distance, hue);
+            blue_colorSort(distance, hue);
+        }
+        else {
+            skills_colorSort(distance,hue);
         }
 
         // Matchload Pneumatics Toggle
@@ -128,6 +121,7 @@ void opcontrol() {
         // Wing Mech Pneumatics Toggle
         wingToggle();
 
+        
         // Logic for anti-jam control
         if (distance < 135) {
             if (allianceColor && ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35))) {

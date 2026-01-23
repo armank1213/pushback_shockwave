@@ -21,7 +21,7 @@ lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
 // Lateral PID controller
 lemlib::ControllerSettings lateralController(14, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              30, // derivative gain (kD)
+                                              100, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds
@@ -31,9 +31,9 @@ lemlib::ControllerSettings lateralController(14, // proportional gain (kP)
 );
 
 // Angular PID controller
-lemlib::ControllerSettings angularController(3, // proportional gain (kP)
+lemlib::ControllerSettings angularController(2, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              19, // derivative gain (kD)
+                                              10, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in degrees
                                               0, // small error range timeout, in milliseconds
@@ -52,6 +52,7 @@ lemlib::OdomSensors sensors(&vertical_wheel, // vertical tracking wheel
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
+
 
 // Input curve for throttle input during driver control
 lemlib::ExpoDriveCurve throttleCurve(3, // joystick deadband out of 127

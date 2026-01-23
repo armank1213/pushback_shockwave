@@ -4,7 +4,9 @@
 
 // UI state variables
 int autonSelection = 0;
-int colorSortMode = 0; // 0 for red, 1 for blue
+int colorSortMode = 2; // 0 for red, 1 for blue, 2 for skills
+
+int driver = 0; // 0 for chey, 1 for naman, 2 for ani, + more
 
 // UI label objects
 lv_obj_t *poseXYlabel = NULL; // x and y coords

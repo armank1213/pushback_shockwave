@@ -1,8 +1,60 @@
-#include "robot/distance_reset.hpp"
-#include "robot/hardware.hpp" // IWYU pragma: keep
+#include "robot/autonomous.hpp"
 #include "robot/chassis_config.hpp" // IWYU pragma: keep
+#include "robot/hardware.hpp" // IWYU pragma: keep
+#include "robot/motors.hpp" // IWYU pragma: keep
+#include "robot/auton_helpers.hpp" // IWYU pragma: keep
 #include "lemlib/api.hpp" // IWYU pragma: keep
+#include "lemlib/asset.hpp"
 #include <cmath>
+
+
+void correct_y(int target_y, int final_x, int final_t, int timeout, bool reversed, bool async) {
+    long startTime = pros::millis();
+    long elapsedTime = 0;
+
+    int delta_y = chassis.getPose().y;
+    while (elapsedTime < 1500) {
+        if (reversed) {
+            chassis.moveToPose(final_x, target_y-delta_y, final_t, timeout, {.forwards=true}, async);
+        }
+        else {
+            chassis.moveToPose(final_x, target_y-delta_y, final_t, timeout, {}, async);
+        }
+        elapsedTime = pros::millis() - startTime;
+    }   
+}
+void correct_x(int target_x, int final_y, int final_t, int timeout, bool reversed, bool async) {
+    long startTime = pros::millis();
+    long elapsedTime = 0;
+    
+    int delta_x = chassis.getPose().x;
+    while (elapsedTime < 1500) {
+        if (reversed) {
+            chassis.moveToPose(target_x-delta_x, final_y, final_t, timeout, {.forwards=true}, async);
+        }
+        else {
+            chassis.moveToPose(target_x-delta_x, final_y, final_t, timeout, {}, async);
+        }
+        elapsedTime = pros::millis() - startTime;
+    }
+}
+void correct_t(int target_t, int final_x, int final_y, int timeout, bool reversed, bool async) {
+    long startTime = pros::millis();
+    long elapsedTime = 0;    
+    
+    int delta_t = chassis.getPose().theta;
+    while (elapsedTime < 1000) {
+        if (reversed) {
+            chassis.moveToPose(final_x, final_y, target_t-delta_t, timeout, {.forwards=false}, async);
+        }
+        else {
+            chassis.moveToPose(final_x, final_y, target_t-delta_t, timeout, {}, async);
+        }
+        elapsedTime = pros::millis() - startTime;
+    }
+}
+
+// distance reset
 
 using namespace std;
 using namespace lemlib;
@@ -43,6 +95,7 @@ struct SensorOffsets {
     double right;
     double back;
 };
+
 
 SensorOffsets sensor_offsets = {0.0, 0.0, 0.0};
 
