@@ -42,7 +42,7 @@ void red_left_auton() {
     /*if (delta_x != 10) {
         chassis.moveToPose(10-delta_x,32,90,500);
     }*/
-    correct_x(10, 33, 90, 1000, false, true); // final x is 11 but correction x is 10
+    correct_x(11, 33, 90, 1000, false, true); // final x is 11 but correction x is 10
 
     intake(127);
     sort(127);
@@ -52,7 +52,7 @@ void red_left_auton() {
 
     delta_t = chassis.getPose().theta;
 
-    chassis.moveToPose(-22,32,90,3000, {.forwards=false}, false);
+    chassis.moveToPose(-22,33,90,3000, {.forwards=false}, false);
 
     limiter.set_value(1);
 

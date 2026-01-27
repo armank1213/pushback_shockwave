@@ -17,21 +17,21 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     S-Bot Motor Layout:
         Left Side Motors:
-            - Port 6 = Front Motor
-            - Port 5 = Middle Motor
-            - Port 4 = Back Motor (Vertical)
+            - Port 8 = Front Motor
+            - Port 11 = Middle Motor
+            - Port 3 = Back Motor (Vertical)
         Right Side Motors:
-            - Port 11 = Front Motor
-            - Port 12 = Middle Motor
-            - Port 7 = Back Motor (Vertical)
+            - Port 9 = Front Motor
+            - Port 20 = Middle Motor
+            - Port 10 = Back Motor (Vertical)
 */
 pros::MotorGroup leftMotors({-6, 5, -4}, pros::MotorGearset::green);
 pros::MotorGroup rightMotors({-11, 12, 7}, pros::MotorGearset::green);
 
 // Individual Motors
 pros::Motor outtakeMotor(15, pros::v5::MotorGears::green); // outtake motor on port 15
-pros::Motor intakeMotor(2, pros::v5::MotorGears::green); // intake motor on port 2
-pros::Motor sortMotor(1, pros::v5::MotorGears::green); // sorting motor on port 1
+pros::Motor intakeMotor(20, pros::v5::MotorGears::green); // intake motor on port 20 or 2
+pros::Motor sortMotor(1, pros::v5::MotorGears::green); // sorting motor on port 1 or 21
 pros::Motor middletakeMotor(9, pros::v5::MotorGears::green); // middletake motor on port 9
 
 // Sensors

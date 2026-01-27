@@ -64,9 +64,11 @@ void autonomous() {
 }
 
 void opcontrol() {
+
+    intakeMotor.set_voltage_limit(5500);
     
-    leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
     // Matchload piston variables
     bool matchloadTogle = false;
@@ -121,7 +123,7 @@ void opcontrol() {
         // Wing Mech Pneumatics Toggle
         wingToggle();
 
-        
+
         // Logic for anti-jam control
         if (distance < 135) {
             if (allianceColor && ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35))) {
