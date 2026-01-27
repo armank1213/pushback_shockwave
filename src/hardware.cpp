@@ -31,7 +31,7 @@ pros::MotorGroup rightMotors({9, 20, 10}, pros::MotorGearset::blue);
 // Individual Motors
 pros::Motor outtakeMotor(2, pros::v5::MotorGears::green);
 pros::Motor intakeMotor(5, pros::v5::MotorGears::green);
-pros::Motor middleMotor(1, pros::v5::MotorGears::green);
+pros::Motor middleMotor(1, pros::v5::MotorGears::blue);
 
 // Sensors
 pros::Imu imu(16);
