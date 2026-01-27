@@ -3,8 +3,6 @@
 // Basic motor movement functions
 void intake(int intakePower);
 void outtake(int outtakePower);
-void middleTake(int middlePower);
-void sort(int sortPower);
 
 // Control functions
 void intakeControl();

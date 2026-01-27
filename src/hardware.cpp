@@ -25,31 +25,29 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
             - Port 20 = Middle Motor
             - Port 10 = Back Motor (Vertical)
 */
-pros::MotorGroup leftMotors({-6, 5, -4}, pros::MotorGearset::green);
-pros::MotorGroup rightMotors({-11, 12, 7}, pros::MotorGearset::green);
+pros::MotorGroup leftMotors({8, 11, 3}, pros::MotorGearset::blue);
+pros::MotorGroup rightMotors({9, 20, 10}, pros::MotorGearset::blue);
 
 // Individual Motors
-pros::Motor outtakeMotor(15, pros::v5::MotorGears::green); // outtake motor on port 15
-pros::Motor intakeMotor(20, pros::v5::MotorGears::green); // intake motor on port 20 or 2
-pros::Motor sortMotor(1, pros::v5::MotorGears::green); // sorting motor on port 1 or 21
-pros::Motor middletakeMotor(9, pros::v5::MotorGears::green); // middletake motor on port 9
+pros::Motor outtakeMotor(2, pros::v5::MotorGears::green);
+pros::Motor intakeMotor(5, pros::v5::MotorGears::green);
+pros::Motor middleMotor(1, pros::v5::MotorGears::green);
 
 // Sensors
-pros::Imu imu(16); // Inertial Sensor on port 16
-pros::Optical colorSensor(19); // Optical Sensor on port 19
-pros::Distance distanceSensor(14); // Distance Sensor on port 14
+pros::Imu imu(16);
+pros::Optical colorSensor(19);
+pros::Distance distanceSensor(14);
 pros::Distance LeftDistanceSensor(16);
-pros::Distance RightDistanceSensor(13); 
+pros::Distance RightDistanceSensor(13);
 pros::Distance BackDistanceSensor(17);
 
 // Pneumatics
-pros::adi::Pneumatics matchLoad('A', false); // Matchload Pneumatics on port A
-pros::adi::Pneumatics limiter('C', false); // Limiter Pneumatics on port G
-pros::adi::Pneumatics wing('E', false); // Wing Pneumatics on port C
+pros::adi::Pneumatics matchLoad('A', false);
+pros::adi::Pneumatics limiter('C', false);
+pros::adi::Pneumatics wing('E', false);
 
 // Tracking Wheels
-// Horizontal tracking wheel encoder. Rotation sensor, port 10, not reversed
-pros::Rotation horizontal_rotation(10);
-// Vertical tracking wheel encoder. Rotation sensor, port 18, reversed
-pros::Rotation vertical_rotation(18);
-
+// Horizontal tracking wheel encoder
+pros::Rotation horizontal_rotation(10); // redo all ports
+// Vertical tracking wheel encoder
+pros::Rotation vertical_rotation(18); // redo all ports

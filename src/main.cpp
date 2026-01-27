@@ -65,7 +65,7 @@ void autonomous() {
 
 void opcontrol() {
 
-    intakeMotor.set_voltage_limit(5500);
+    intakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
@@ -92,7 +92,7 @@ void opcontrol() {
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // Chassis Drive Functions
-        chassis.arcade(leftY, rightX, false, .3);
+        chassis.arcade(-rightX, -leftY, false, .3);
 
         // Intake and outtake control functions
         intakeControl();

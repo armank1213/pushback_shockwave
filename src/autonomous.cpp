@@ -45,9 +45,6 @@ void red_left_auton() {
     correct_x(11, 33, 90, 1000, false, true); // final x is 11 but correction x is 10
 
     intake(127);
-    sort(127);
-    outtake(127);
-
     pros::delay(2300);
 
     delta_t = chassis.getPose().theta;
@@ -58,7 +55,6 @@ void red_left_auton() {
 
 
     intake(127);
-    sort(127);
     outtake(127);
 
     /*
