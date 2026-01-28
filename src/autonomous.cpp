@@ -11,7 +11,8 @@ void blue_left_auton() {
 }
 
 void blue_right_auton() {
-    // TODO: Implement blue right autonomous
+    chassis.setPose(0,0,90);
+    chassis.moveToPoint(0,10,1000);
 }
 
 void red_left_auton() {
@@ -34,7 +35,7 @@ void red_left_auton() {
     correct_t(90, 0, 32, 1000, false, true);
 
 
-    matchLoad.set_value(1);
+    //matchLoad.set_value(1);
 
 
     chassis.moveToPose(11,33,90,1000);
@@ -51,7 +52,7 @@ void red_left_auton() {
 
     chassis.moveToPose(-22,33,90,3000, {.forwards=false}, false);
 
-    limiter.set_value(1);
+    //limiter.set_value(1);
 
 
     intake(127);

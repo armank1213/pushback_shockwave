@@ -3,25 +3,25 @@
 
 // Tracking wheels
 // 11 inch long, 13.5 inch wide
-// Tracking center (6.875, 5.5)
-// Horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.5);
-// Vertical tracking wheel. 2" diameter, 0.37" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, 0);
+// Tracking center ()
+// Horizontal tracking wheel. 2" diameter, 5.5625" offset, back of the robot (negative)
+lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.5625);
+// Vertical tracking wheel. 2" diameter, 1.75" offset, right of the robot (positive)
+lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, 1.75);
 
 // Drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              12.5, // 12.5 inch track width
-                              lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
-                              360, // drivetrain rpm is 360
-                              8 // horizontal drift is 8
+                              11, // 11 inch track width
+                              lemlib::Omniwheel::NEW_275, // using new 3.25" omnis
+                              450, // drivetrain rpm is 360
+                              2 // horizontal drift is 8 but 2 for now idk
 );
 
 // Lateral PID controller
-lemlib::ControllerSettings lateralController(14, // proportional gain (kP)
+lemlib::ControllerSettings lateralController(10, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              100, // derivative gain (kD)
+                                              3, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds

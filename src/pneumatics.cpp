@@ -4,7 +4,7 @@
 
 // pneumatic mech functions
 
-void matchloadToggle() {
+/*void matchloadToggle() {
 
     // Matchload piston variables
     static bool matchloadPistonToggle = false;
@@ -17,8 +17,8 @@ void matchloadToggle() {
         matchLoad.set_value(matchloadPistonToggle);
     }
     lastAButtonState = currentA;
-}
-void limiterToggle() {
+}*/
+/* void limiterToggle() {
 
     // Limiter piston variables
     static bool limiterPistonToggle = false;
@@ -32,8 +32,8 @@ void limiterToggle() {
         limiter.set_value(limiterPistonToggle);
     }
     lastYButtonState = currentY;
-}
-void wingToggle() {
+} */
+/* void wingToggle() {
 
     static bool wingPistonToggle = false;
     static bool lastXButtonState = false;
@@ -46,4 +46,4 @@ void wingToggle() {
     }
     
     lastXButtonState = currentX;
-}
+} */

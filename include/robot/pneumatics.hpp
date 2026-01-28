@@ -1,6 +1,6 @@
 #pragma once
 
 // pneumatic mech functions
-void matchloadToggle();
-void limiterToggle();
-void wingToggle();
+//void matchloadToggle();
+//void limiterToggle();
+//void wingToggle();

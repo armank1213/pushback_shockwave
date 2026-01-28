@@ -22,17 +22,14 @@ extern pros::Motor middleMotor;
 
 // Sensors
 extern pros::Imu imu;
-extern pros::Optical colorSensor;
-extern pros::Distance distanceSensor;
-extern pros::Distance LeftDistanceSensor;
-extern pros::Distance RightDistanceSensor;
-extern pros::Distance BackDistanceSensor;
+//extern pros::Optical colorSensor;
+//extern pros::Distance distanceSensor;
 
 
 // Pneumatics
-extern pros::adi::Pneumatics matchLoad;
-extern pros::adi::Pneumatics limiter;
-extern pros::adi::Pneumatics wing;
+//extern pros::adi::Pneumatics matchLoad;
+//extern pros::adi::Pneumatics limiter;
+//extern pros::adi::Pneumatics wing;
 
 // Tracking Wheels
 extern pros::Rotation horizontal_rotation;

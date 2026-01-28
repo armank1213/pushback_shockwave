@@ -77,7 +77,7 @@ double angle_error(double angle_a, double angle_b) {
 
 // Initializing 
 
-Pose pose = Pose(-54.422, -9.185, 0);
+Pose pose = Pose(0, 0, 0);
 
 double x = pose.x;
 double y = pose.y;
@@ -105,7 +105,7 @@ double y_prev = y;
 const double WHEEL_CIRCUMFERENCE = Omniwheel::NEW_2 * M_PI; // mm
 
 std::pair<double, double> reset_distance() {
-
+/*
     while (true) {
 
         double current_rotation = vertical_rotation.get_position();
@@ -152,5 +152,7 @@ std::pair<double, double> reset_distance() {
 
         pros::delay(20);
     }
+*/
+return {0,0}; // delete this (placeholder)
 }
 

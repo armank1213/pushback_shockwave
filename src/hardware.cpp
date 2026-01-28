@@ -34,20 +34,17 @@ pros::Motor intakeMotor(5, pros::v5::MotorGears::green);
 pros::Motor middleMotor(1, pros::v5::MotorGears::blue);
 
 // Sensors
-pros::Imu imu(16);
-pros::Optical colorSensor(19);
-pros::Distance distanceSensor(14);
-pros::Distance LeftDistanceSensor(16);
-pros::Distance RightDistanceSensor(13);
-pros::Distance BackDistanceSensor(17);
+pros::Imu imu(6);
+//pros::Optical colorSensor(19);
+//pros::Distance distanceSensor(14);
 
 // Pneumatics
-pros::adi::Pneumatics matchLoad('A', false);
-pros::adi::Pneumatics limiter('C', false);
-pros::adi::Pneumatics wing('E', false);
+//pros::adi::Pneumatics matchLoad('A', false);
+//pros::adi::Pneumatics limiter('C', false);
+//pros::adi::Pneumatics wing('E', false);
 
 // Tracking Wheels
 // Horizontal tracking wheel encoder
-pros::Rotation horizontal_rotation(10); // redo all ports
+pros::Rotation horizontal_rotation(16); // redo all ports
 // Vertical tracking wheel encoder
-pros::Rotation vertical_rotation(18); // redo all ports
+pros::Rotation vertical_rotation(15); // redo all ports

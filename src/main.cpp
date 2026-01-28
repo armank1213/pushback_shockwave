@@ -60,15 +60,15 @@ void autonomous() {
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-    red_left_auton();
+    blue_right_auton();
 }
 
 void opcontrol() {
 
     intakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     
-    leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
     // Matchload piston variables
     bool matchloadTogle = false;
@@ -92,18 +92,19 @@ void opcontrol() {
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // Chassis Drive Functions
-        chassis.arcade(-rightX, -leftY, false, .3);
+        chassis.arcade(-rightX, -leftY, false, .6);
+        //chassis.curvature(-rightX, -leftY);
 
         // Intake and outtake control functions
         intakeControl();
         outtakeControl();
         
         // Set light to 100% and get distance and color readings
-        colorSensor.set_led_pwm(100);
-        int distance = distanceSensor.get_distance();
-        double hue = colorSensor.get_hue();
+        //colorSensor.set_led_pwm(100);
+        //int distance = distanceSensor.get_distance();
+        //double hue = colorSensor.get_hue();
 
-        // Color sorting functions
+        /*// Color sorting functions
         if (colorSortMode == 0) {
             red_colorSort(distance, hue);
         }
@@ -112,8 +113,9 @@ void opcontrol() {
         }
         else {
             skills_colorSort(distance,hue);
-        }
+        }*/
 
+        /*
         // Matchload Pneumatics Toggle
         matchloadToggle();
 
@@ -122,9 +124,10 @@ void opcontrol() {
 
         // Wing Mech Pneumatics Toggle
         wingToggle();
+        */
 
 
-        // Logic for anti-jam control
+        /*// Logic for anti-jam control
         if (distance < 135) {
             if (allianceColor && ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35))) {
                 isOurBlock = true;
@@ -133,7 +136,7 @@ void opcontrol() {
             }
         }
         bool antiJamButtonPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
-        antiJamControl(antiJamButtonPressed, isOurBlock);
+        antiJamControl(antiJamButtonPressed, isOurBlock);*/
 
         // Delay to save resources
         lv_timer_handler();
