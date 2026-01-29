@@ -78,7 +78,7 @@ void opcontrol() {
     // Wing piston variables
     bool wingPistonToggle = false;
     static bool lastXButtonState = false;
-
+ 
     // Color sorting variables
     static int sortMode = 0;
     static bool LastB_ButtonState = false;
