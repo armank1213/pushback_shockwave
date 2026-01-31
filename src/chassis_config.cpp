@@ -5,15 +5,15 @@
 // 11 inch long, 13.5 inch wide
 // Tracking center (6.875, 5.5)
 // Horizontal tracking wheel. 2" diameter, 5.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.5625);
+lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_2, -5.5);
 // Vertical tracking wheel. 2" diameter, 0.37" offset, left of the robot (negative)
-lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, 1.75);
+lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_2, 1.5);
 
 // Drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              11, // 11 inch track width
-                              lemlib::Omniwheel::NEW_2, // using new 2" omnis
+                              10.25, // 11 inch track width
+                              lemlib::Omniwheel::NEW_275, // using new 2" omnis
                               450, // drivetrain rpm is 360
                               2 // horizontal drift is 2 for now
 );

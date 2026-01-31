@@ -54,6 +54,7 @@ void correct_t(int target_t, int final_x, int final_y, int timeout, bool reverse
     }
 }
 
+/*
 // distance reset
 
 using namespace std;
@@ -105,7 +106,7 @@ double y_prev = y;
 const double WHEEL_CIRCUMFERENCE = Omniwheel::NEW_2 * M_PI; // mm
 
 std::pair<double, double> reset_distance() {
-/*
+
     while (true) {
 
         double current_rotation = vertical_rotation.get_position();
@@ -152,7 +153,6 @@ std::pair<double, double> reset_distance() {
 
         pros::delay(20);
     }
-*/
 return {0,0}; // delete this (placeholder)
 }
-
+*/

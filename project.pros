@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Lemlib",
+    "project_name": "Lbot",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -635,9 +635,9 @@
       }
     },
     "upload_options": {
-      "slot": 6,
+      "slot": 1,
       "icon": "planet",
-      "description": "Shockwave Code"
+      "description": "lbot code :)"
     },
     "use_early_access": true
   }

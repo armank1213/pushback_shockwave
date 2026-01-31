@@ -37,7 +37,7 @@ void intakeControl() {
         intake(-127);
     }
     else {
-        intake(30);
+        intake(0);
     }
 }
 
@@ -49,7 +49,7 @@ void outtakeControl() {
         outtake(-127);
     }
     else {
-        outtake(30);
+        outtake(0);
     }
 }
 

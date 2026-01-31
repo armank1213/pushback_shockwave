@@ -27,15 +27,20 @@ void initialize() {
     while (imu.is_calibrating()) {
         pros::delay(10);
     }
+    pros::lcd::initialize(); // initialize brain screen
+
 
     // Initialize UI
-    initializeUI();
+    //initializeUI();
 
     // Thread for brain screen and position logging
     pros::Task screenTask([&]() {
         while (true) {
             // Log position telemetry
             lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
+            pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+            pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+            pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // theta
             // Delay to save resources
             pros::delay(50);
         }
@@ -60,7 +65,7 @@ void autonomous() {
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 
-    red_left_auton();
+    blue_right_auton();
 }
 
 void opcontrol() {
@@ -93,7 +98,7 @@ void opcontrol() {
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // Chassis Drive Functions
-        chassis.arcade(leftY, rightX, false, .3);
+        chassis.arcade(-rightX, -leftY, false, .3);
 
         // Intake and outtake control functions
         intakeControl();
