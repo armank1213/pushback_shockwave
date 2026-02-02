@@ -27,11 +27,11 @@ void initialize() {
     while (imu.is_calibrating()) {
         pros::delay(10);
     }
-    pros::lcd::initialize(); // initialize brain screen
+    //pros::lcd::initialize(); // initialize brain screen
 
 
     // Initialize UI
-    //initializeUI();
+    initializeUI();
 
     // Thread for brain screen and position logging
     pros::Task screenTask([&]() {
@@ -65,7 +65,7 @@ void autonomous() {
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 
-    blue_right_auton();
+    red_left_auton();
 }
 
 void opcontrol() {
@@ -98,7 +98,8 @@ void opcontrol() {
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // Chassis Drive Functions
-        chassis.arcade(-rightX, -leftY, false, .3);
+        chassis.arcade(leftY, rightX, false, .6);
+        //chassis.tank(leftY, rightX, false);
 
         // Intake and outtake control functions
         intakeControl();
@@ -108,21 +109,24 @@ void opcontrol() {
         colorSensor.set_led_pwm(100);
         int distance = distanceSensor.get_distance();
         double hue = colorSensor.get_hue();
-        
-        fullMotorControl();
-        halfMotorControl();
+    
 
-        /*// Color sorting functions
-        if (colorSortMode == 0) {
-            red_colorSort(sortMode, distance, hue);
+        // Color sorting functions
+        /*if (colorSortMode == 0) {
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+                if (limiter.is_extended() == false) {
+                    red_colorSort(distance, hue);
+                }
+            }
         }
         else if (colorSortMode == 1) {
-            blue_colorSort(sortMode, distance, hue);
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+                if (limiter.is_extended() == false) {
+                    blue_colorSort(distance, hue);
+                }
+            }
         }*/
         
-        //blue_colorSort(distance, hue);
-        red_colorSort(distance, hue);
-
         // Matchload Pneumatics Toggle
         matchloadToggle();
 
@@ -131,17 +135,6 @@ void opcontrol() {
 
         // Wing Mech Pneumatics Toggle
         wingToggle();
-
-        // Logic for anti-jam control
-        if (distance < 135) {
-            if (allianceColor && ((hue <= 360 && hue >= 300) || (hue >= 0 && hue <= 35))) {
-                isOurBlock = true;
-            } else if (!allianceColor && (hue <= 250 && hue >= 180)) {
-                isOurBlock = true;
-            }
-        }
-        bool antiJamButtonPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
-        antiJamControl(antiJamButtonPressed, isOurBlock);
 
         // Delay to save resources
         lv_timer_handler();
