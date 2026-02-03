@@ -3,7 +3,7 @@
 #include "robot/hardware.hpp" // IWYU pragma: keep
 #include "robot/motors.hpp" // IWYU pragma: keep
 #include "robot/auton_helpers.hpp" // IWYU pragma: keep
-#include "lemlib/asset.hpp"
+#include "lemlib/asset.hpp" // IWYU pragma: keep
 
 // Get paths used for pure pursuit
 
