@@ -19,9 +19,9 @@ lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
 );
 
 // Lateral PID controller
-lemlib::ControllerSettings lateralController(28, // proportional gain (kP)
+lemlib::ControllerSettings lateralController(24, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              57, // derivative gain (kD)
+                                              60, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds

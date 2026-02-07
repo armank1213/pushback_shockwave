@@ -20,7 +20,7 @@ void intakeControl() {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
         intake(127);
     }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // R2 for chey, L1 for naman
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // R2 for chey, L1 for naman
         intake(-127);
     }
     else {
@@ -30,7 +30,7 @@ void intakeControl() {
 }
 
 void outtakeControl() {
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
         outtake(127);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // L2 for chey, L2 for naman

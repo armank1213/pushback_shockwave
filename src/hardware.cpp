@@ -15,6 +15,7 @@ pros::Motor middleMotor(7, pros::v5::MotorGears::blue); // middletake motor on p
 // Sensors
 pros::Optical colorSensor(8); // Optical Sensor on port 19
 pros::Distance distanceSensor(2); // Distance Sensor on port 14
+pros::Optical limiter_light(9); // Synesthesia sensor on port 9
 pros::Imu imu(3);
 pros::Rotation vertical_rotation(-11);
 pros::Rotation horizontal_rotation(-20);
