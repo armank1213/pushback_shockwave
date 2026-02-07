@@ -21,7 +21,7 @@ void matchloadToggle() {
 void limiterToggle() {
 
     // Limiter piston variables
-    static bool limiterPistonToggle = false;
+    static bool limiterPistonToggle = true;
     static bool lastYButtonState = false;
     
     // Limiter Pneumatics Toggle
@@ -47,3 +47,4 @@ void wingToggle() {
     
     lastXButtonState = currentX;
 }
+

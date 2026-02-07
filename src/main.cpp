@@ -95,11 +95,11 @@ void opcontrol() {
     while (true) {
         // Get joystick positions
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // Chassis Drive Functions
         //chassis.arcade(leftY, rightY, false, .6);
-        chassis.tank(leftY, rightY, false);
+        chassis.arcade(leftY, rightX, false, .65);
 
         //chassis.curvature(leftY, rightY, false);
 
@@ -134,7 +134,6 @@ void opcontrol() {
 
         // Limiter Pneumatics Toggle
         limiterToggle();
-
         if (limiter.is_extended()) { // limiter indicator
             limiter_light.set_led_pwm(100);
         } else {
@@ -143,7 +142,6 @@ void opcontrol() {
 
         // Wing Mech Pneumatics Toggle
         wingToggle();
-
         // Delay to save resources
         lv_timer_handler();
         pros::delay(30);

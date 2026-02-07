@@ -41,8 +41,47 @@ void red_left_auton() {
     // make a route that intakes mid 3 blocks and scores them in top mid goal (this is left auton).
     // make that perfect, then after that go backwards with {.forwards=false} and then matchload.
     chassis.setPose(0,0,0);
-    chassis.moveToPoint(0,20,2000);
+    limiter.set_value(1);
+    //collect 3 blocks
+    chassis.moveToPose(0, 29, 0, 1500, {.forwards = true, .lead = 0, .maxSpeed = 80}, true);
+    intake(127); // intake plus limiter
+    outtake(127);
+    pros::delay(1750);
+    intake(0);
+    // score in mid goal
+    chassis.moveToPose(21, 37.5, -109, 2500, {.forwards = false, .lead = 0, .maxSpeed = 90}, false);
+    intake(-80);
+    outtake(-127);
+    limiter.set_value(0);
+    pros::delay(250);
+    intake(127);
+    outtake(-127);
+    chassis.moveToPose(10, 37.5, -109, 1000, {.forwards = false, .lead = 0, .maxSpeed = 200}, false);
+    chassis.moveToPose(21, 37.5, -109, 1000, {.forwards = false, .lead = 0, .maxSpeed = 200}, false);
 
+    pros::delay(1000);
+    // back up to align with matchload
+    limiter.set_value(1);
+    chassis.moveToPose(-36, 16, -155, 2250, {.forwards = true, .lead = 0, .maxSpeed = 90}, true);
+    intake(50);
+    chassis.moveToPose(-41, -1, -155, 1500, {.forwards = true, .lead = 0, .maxSpeed = 100}, true);
+    //chassis.moveToPoint(-41, 3, 5000, {.forwards = true, .maxSpeed = 90}, true);
+    matchLoad.set_value(1);
+    intake(127);
+    outtake(127);
+    pros::delay(2500);
+    chassis.moveToPose(-27, 32, -160, 5000, {.forwards = false, .lead = 0, .maxSpeed = 110}, true);
+    matchLoad.set_value(0);
+    pros::delay(1200);
+    limiter.set_value(0);
+    outtake(127);
+
+
+
+
+
+    
+//-38 5 -152
     // MATCHLOAD AUTONOMOUS ROUTE DO NOT USE FOR NOW TRY MID ROUTE ABOVE
     /*chassis.moveToPoint(0,32,1000);
     chassis.turnToHeading(-90,1000);
