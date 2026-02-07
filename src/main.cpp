@@ -98,8 +98,10 @@ void opcontrol() {
         int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
         // Chassis Drive Functions
-        //chassis.curvature(leftY, rightX, false);
+        //chassis.arcade(leftY, rightY, false, .6);
         chassis.tank(leftY, rightY, false);
+
+        //chassis.curvature(leftY, rightY, false);
 
         // Intake and outtake control functions
         intakeControl();
