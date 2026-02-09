@@ -98,22 +98,7 @@ void red_left_auton() {
 void red_right_auton() {
     chassis.setPose(0, 0, 0);
     chassis.moveToPose(-5, 20, 0, 1000, {.forwards = true, .lead = .4, .maxSpeed = 60}, false);
-    chassis.moveToPose(11, 39, 0, 2200, {.forwards = true, .lead = 0, .maxSpeed = 60}, false);
-    pros::delay(300);
-    matchLoad.set_value(1);
-    intake(127);
-    limiter.set_value(1);
-    chassis.moveToPose(35.5, 5, -180, 2200, {.forwards = false, .lead = 0, .maxSpeed = 100}, false);
-    matchLoad.set_value(0);
-    chassis.moveToPoint(35.5, 30, 1500, {.forwards = false}, false);
-    intake(127);
-    outtake(-127);
-    pros::delay(3000);
-    intake(0);
-    outtake(0);
-    chassis.moveToPoint(35.5, 10, 1500, {.forwards = true}, false);
-    wing.set_value(1);
-    chassis.moveToPose(22, 42, 0, 2200, {.forwards = true, .maxSpeed = 80}, false);
+    
 
 }
 

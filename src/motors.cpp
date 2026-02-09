@@ -17,7 +17,7 @@ void middletake(int sortPower) {
 
 // Control functions
 void intakeControl() {
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {//chey r1
         intake(127);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // R2 for chey, L1 for naman
@@ -30,7 +30,7 @@ void intakeControl() {
 }
 
 void outtakeControl() {
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {//chey l1
         outtake(127);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // L2 for chey, L2 for naman

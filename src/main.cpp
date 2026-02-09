@@ -65,7 +65,7 @@ void autonomous() {
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 
-    red_left_auton();
+    red_right_auton();
 }
 
 void opcontrol() {
@@ -128,17 +128,22 @@ void opcontrol() {
                 }
             }
         }*/
+        // Limiter Light Toggle
+        limiterLight();
         
         // Matchload Pneumatics Toggle
         matchloadToggle();
 
         // Limiter Pneumatics Toggle
         limiterToggle();
-        if (limiter.is_extended()) { // limiter indicator
-            limiter_light.set_led_pwm(100);
-        } else {
-            limiter_light.set_led_pwm(0);
-        }
+
+        
+
+        // if (limiter.is_extended()) { // limiter indicator
+           // limiter_light.set_led_pwm(100);
+      //  } else {
+       //     limiter_light.set_led_pwm(0);
+     //   }
 
         // Wing Mech Pneumatics Toggle
         wingToggle();
