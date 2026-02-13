@@ -95,11 +95,13 @@ void opcontrol() {
     while (true) {
         // Get joystick positions
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
         // Chassis Drive Functions
         //chassis.arcade(leftY, rightY, false, .6);
-        chassis.arcade(leftY, rightX, false, .65);
+
+        // lmao deal with it naman + chey
+        chassis.tank(leftY, rightY, false);
 
         //chassis.curvature(leftY, rightY, false);
 
