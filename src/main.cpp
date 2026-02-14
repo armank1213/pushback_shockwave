@@ -64,8 +64,11 @@ void autonomous() {
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-
-    red_left_auton();
+    if (autonSelection == 0) {
+        left_auton();
+    } else if (autonSelection == 1) {
+        right_auton();
+    }
 }
 
 void opcontrol() {
@@ -95,13 +98,13 @@ void opcontrol() {
     while (true) {
         // Get joystick positions
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // Chassis Drive Functions
         //chassis.arcade(leftY, rightY, false, .6);
 
-        // lmao deal with it naman + chey (hella right - arman)
-        chassis.tank(leftY, rightY, false);
+        // lmao deal with it naman + chey - achin (hella right - arman)
+        chassis.arcade(leftY, rightX, false, 0.6);
 
         //chassis.curvature(leftY, rightY, false);
 
@@ -130,9 +133,6 @@ void opcontrol() {
                 }
             }
         }*/
-        // Limiter Light Toggle
-        limiterLight();
-        
         // Matchload Pneumatics Toggle
         matchloadToggle();
 

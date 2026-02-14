@@ -11,20 +11,13 @@ lv_obj_t *poseXYlabel = NULL; // x and y coords
 lv_obj_t *poseTlabel = NULL; // theta (direction robot is facing)
 
 // Button event handlers
-void blueLeft_ButtonEvent(lv_event_t *e) {
+
+void left_ButtonEvent(lv_event_t *e) {
+    autonSelection = 0;
+}
+
+void right_ButtonEvent(lv_event_t *e) {
     autonSelection = 1;
-}
-
-void blueRight_ButtonEvent(lv_event_t *e) {
-    autonSelection = 2;
-}
-
-void redLeft_ButtonEvent(lv_event_t *e) {
-    autonSelection = 3;
-}
-
-void redRight_ButtonEvent(lv_event_t *e) {
-    autonSelection = 4;
 }
 
 void red_colorSort(lv_event_t *e) {
@@ -36,35 +29,20 @@ void blue_colorSort(lv_event_t *e) {
 }
 
 // Button creation functions
-void blueLeft_Button(void) {
-    lv_obj_t *button1 = lv_button_create(lv_screen_active());
-    lv_obj_add_event_cb(button1, blueLeft_ButtonEvent, LV_EVENT_ALL, NULL);
-    lv_obj_t *button1_label = lv_label_create(button1);
-    lv_label_set_text(button1_label, "Blue Left Auton");
-    lv_obj_align(button1, LV_ALIGN_TOP_LEFT,0,80);
-}
 
-void blueRight_Button(void) {
-    lv_obj_t *button2 = lv_button_create(lv_screen_active());
-    lv_obj_add_event_cb(button2, blueRight_ButtonEvent, LV_EVENT_ALL, NULL);
-    lv_obj_t *button2_label = lv_label_create(button2);
-    lv_label_set_text(button2_label, "Blue Right Auton");
-    lv_obj_align(button2, LV_ALIGN_TOP_RIGHT,0,30);
-}
-
-void redLeft_Button(void) {
+void left_Button(void) {
     lv_obj_t *button3 = lv_button_create(lv_screen_active());
-    lv_obj_add_event_cb(button3, redLeft_ButtonEvent, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(button3, left_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button3_label = lv_label_create(button3);
-    lv_label_set_text(button3_label, "Red Left Auton");
+    lv_label_set_text(button3_label, "Left Auton");
     lv_obj_align(button3, LV_ALIGN_TOP_LEFT, 0,30);
 }
 
-void redRight_Button(void) {
+void right_Button(void) {
     lv_obj_t *button4 = lv_button_create(lv_screen_active());
-    lv_obj_add_event_cb(button4, redRight_ButtonEvent, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(button4, right_ButtonEvent, LV_EVENT_ALL, NULL);
     lv_obj_t *button4_label = lv_label_create(button4);
-    lv_label_set_text(button4_label, "Red Right Auton");
+    lv_label_set_text(button4_label, "Right Auton");
     lv_obj_align(button4, LV_ALIGN_TOP_RIGHT,0,80);
 }
 
@@ -115,10 +93,8 @@ void initializeUI() {
 
     poseXY_Label();
     poseT_Label();
-    blueLeft_Button();
-    blueRight_Button();
-    redLeft_Button();
-    redRight_Button();
+    left_Button();
+    right_Button();
     bluecolorSortButton();
     redcolorSortButton();
 

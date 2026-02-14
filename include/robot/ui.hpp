@@ -11,19 +11,15 @@ extern int colorSortMode;
 extern lv_obj_t *poseXYlabel;
 extern lv_obj_t *poseTlabel;
 
-// Button event handlers
-void blueLeft_ButtonEvent(lv_event_t *e);
-void blueRight_ButtonEvent(lv_event_t *e);
-void redLeft_ButtonEvent(lv_event_t *e);
-void redRight_ButtonEvent(lv_event_t *e);
+// Button event handlers);
+void left_ButtonEvent(lv_event_t *e);
+void right_ButtonEvent(lv_event_t *e);
 void red_colorSort(lv_event_t *e);
 void blue_colorSort(lv_event_t *e);
 
 // Button creation functions
-void blueLeft_Button(void);
-void blueRight_Button(void);
-void redLeft_Button(void);
-void redRight_Button(void);
+void left_Button(void);
+void right_Button(void);
 void redcolorSortButton(void);
 void bluecolorSortButton(void);
 
