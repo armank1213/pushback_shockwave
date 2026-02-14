@@ -7,7 +7,7 @@
 #include "pros/rtos.hpp"
 #include "robot/distance_reset.hpp" // IWYU pragma: keep
 #include "robot/motors.hpp" 
-#include "robot/color_sort.hpp" 
+#include "robot/color_sort.hpp" // IWYU pragma: keep
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -65,7 +65,7 @@ void autonomous() {
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 
-    red_right_auton();
+    red_left_auton();
 }
 
 void opcontrol() {
@@ -100,7 +100,7 @@ void opcontrol() {
         // Chassis Drive Functions
         //chassis.arcade(leftY, rightY, false, .6);
 
-        // lmao deal with it naman + chey
+        // lmao deal with it naman + chey (hella right - arman)
         chassis.tank(leftY, rightY, false);
 
         //chassis.curvature(leftY, rightY, false);

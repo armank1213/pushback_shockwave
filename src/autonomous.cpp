@@ -3,7 +3,7 @@
 #include "robot/hardware.hpp" // IWYU pragma: keep
 #include "robot/motors.hpp" // IWYU pragma: keep
 #include "robot/auton_helpers.hpp" // IWYU pragma: keep
-#include "lemlib/asset.hpp"
+#include "lemlib/asset.hpp" // IWYU pragma: keep
 
 // Get paths used for pure pursuit
 
@@ -37,24 +37,45 @@ void blue_right_auton() {
 }
 
 void red_left_auton() {
-    chassis.setPose(0, 0, 0);
+    chassis.setPose(0,0,0);
+
     limiter.set_value(1);
     intakeMotor.move(-127);
     middleMotor.move(-127);
     outtake(127);
     //chassis.moveToPose(4, 15, 9, 1500, {.forwards = true, .lead = 0.5, .maxSpeed = 80}, true);
     // pros::delay(250);
-    chassis.moveToPose(0, 32, -7, 2500, {.forwards = true, .lead = 0.8, .minSpeed=19}, false);
+    chassis.moveToPose(0, 32, -7, 2500, {.forwards = true, .lead = 0.8, .minSpeed=17}, false);
     //chassis.turnToHeading(-96, 2000);
-    chassis.moveToPose(0,28, -114, 2500, {.forwards = false, .lead = 0, .minSpeed=40}, false); // 1 30
+    chassis.moveToPose(0,27, -114, 2500, {.forwards = false, .lead = 0, .minSpeed=40}, false);
     limiter.set_value(0);
-    middleMotor.move(100);
+    //middleMotor.move(100);
     middleMotor.move(-127);
     outtake(-127);
     pros::delay(1500);
-    //chassis.moveToPoint(-44,-11,2000);
-    //chassis.moveToPose(-44, -11, -114, 2500, {.forwards = true, .lead = 0, .minSpeed=80}, false);
+    //chassis.moveToPose(-48, -15, -150, 3000, {.forwards = true, .lead = .6, .minSpeed=67}, false);
+    chassis.moveToPoint(-44, -10, 3000, {.forwards=true, .minSpeed=55});
+    chassis.turnToHeading(-150, 1000);
     matchLoad.set_value(1);
+    chassis.moveToPoint(-44, -25, 3000, {.forwards=true, .minSpeed=35}, true);
+    limiter.set_value(1);
+    intakeMotor.move(-127);
+    middleMotor.move(-127);
+    outtake(127);
+    chassis.turnToHeading(-154, 1000);
+    chassis.moveToPoint(-34, 2, 2000, {.forwards=false, .minSpeed=45}, false);
+    limiter.set_value(0);
+    outtake(127);
+    middleMotor.move(-127);
+    
+    
+    /*matchLoad.set_value(1);
+    limiter.set_value(1);
+    chassis.moveToPose(-50, -20, -152, 1500, {.forwards = true, .lead = 0, .minSpeed=35}, false);
+    intakeMotor.move(-127);
+    middleMotor.move(-127);
+    outtake(127);*/
+
 }
 
 void red_right_auton() {
