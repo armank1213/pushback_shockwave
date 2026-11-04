@@ -63,6 +63,58 @@ void left_auton() {
 
 }
 
+void left_auton_override() {
+    chassis.setPose(-65.219, -2.591, 90);
+
+    // Start → P1: front faces goal 2 (north side)
+    chassis.moveToPose(-46.904, -19.68, 180, 2000, {.lead = 0.3, .maxSpeed = 50});
+    chassis.waitUntilDone();
+    // ...outtake into goal 2...
+
+    // Back off, aim the back at P2, reverse in
+    chassis.moveToPoint(-46.904, -9.5, 800, {.forwards = false});
+    chassis.turnToHeading(290, 900);
+    chassis.moveToPose(-26.312, -23.356, 270, 2000,
+                       {.forwards = false, .lead = 0.4, .maxSpeed = 50});
+    chassis.waitUntilDone();
+    // ...intake at P2...
+
+    // P2 → goal 2 east side
+    chassis.moveToPoint(-41.17, -24.28, 1500, {.maxSpeed = 50});
+    chassis.waitUntilDone();
+    // ...outtake the P2 block into goal 2...
+
+    // Goal 2 → loader, BACK FIRST
+    chassis.moveToPoint(-32, -24.28, 900, {.forwards = false});
+    chassis.turnToHeading(0, 900);                       // back points south, down the lane
+    chassis.moveToPoint(-37, -59.046, 2000, {.forwards = false, .maxSpeed = 60});
+    chassis.turnToHeading(90, 900);                      // back faces the loader
+    chassis.moveToPoint(-63.267, -59.046, 2000, {.forwards = false, .maxSpeed = 60});
+
+    for (int i = 0; i < 2; i++) {
+        chassis.waitUntilDone();
+        // matchload
+
+        // Loader → goal 2 south side (P5): drive FORWARD off the loader
+        chassis.moveToPoint(-59.5, -59.046, 700);
+        chassis.turnToHeading(0, 700);
+        chassis.moveToPoint(-59.5, -38, 1200, {.minSpeed = 40, .earlyExitRange = 3});
+        chassis.moveToPose(-47.159, -29.228, 0, 2000, {.lead = 0.3, .maxSpeed = 60});
+        chassis.waitUntilDone();
+        // ...outtake into goal 2...
+
+        if (i == 2 - 1) break;
+
+        // P5 → loader, back first
+        chassis.moveToPose(-59.5, -44, 0, 1500,
+                           {.forwards = false, .lead = 0.5, .minSpeed = 40, .earlyExitRange = 3});
+        chassis.moveToPoint(-59.5, -59.046, 1200, {.forwards = false});
+        chassis.turnToHeading(90, 700);
+        chassis.moveToPoint(-63.267, -59.046, 800, {.forwards = false});
+    }
+}
+
+
 void right_auton() {
     chassis.setPose(0, 0, 0);
 }
