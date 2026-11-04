@@ -4,28 +4,24 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 
-pros::MotorGroup leftMotors({-19, -13, -17}, pros::MotorGearset::blue);
-pros::MotorGroup rightMotors({12, 18, 14}, pros::MotorGearset::blue);
+// Drive: 4 blue motors, {front, back} per side.
+pros::MotorGroup leftMotors({11, 12}, pros::MotorGearset::blue);
+pros::MotorGroup rightMotors({13, 14}, pros::MotorGearset::blue);
 
 // Individual Motors
-pros::Motor outtakeMotor(10, pros::v5::MotorGears::green); 
-pros::Motor intakeMotor(15, pros::v5::MotorGears::green); 
-pros::Motor middleMotor(7, pros::v5::MotorGears::blue); 
+pros::Motor cascadeRight(1, pros::v5::MotorGears::green);
+pros::Motor cascadeLeft(-2, pros::v5::MotorGears::green);
 
 // Sensors
-pros::Optical colorSensor(8); 
-pros::Distance distanceSensor(2); // Also used for color sorting
-// Port 6 collision with bdist_sens. Re-port before re-enabling.
-// pros::Optical limiter_light(6); // Used for limiter state indication
-pros::Imu imu(3);
-pros::Rotation vertical_rotation(-11);
+pros::Imu imu(6);
+pros::Rotation vertical_rotation(-19);
 pros::Rotation horizontal_rotation(20);
 
-// Perimeter distance sensors (localization)
-pros::Distance ldist_sens(9);
-pros::Distance rdist_sens(4); 
-pros::Distance fdist_sens(5);
-pros::Distance bdist_sens(6);
+// Perimeter distance sensors (localization).
+pros::Distance ldist_sens(5);
+pros::Distance rdist_sens(3);
+pros::Distance fdist_sens(4);
+pros::Distance bdist_sens(10);
 
 // Pneumatics
 pros::adi::Pneumatics matchLoad('E', false);

@@ -4,7 +4,6 @@
 #include "pros/motors.hpp"
 #include "pros/motor_group.hpp"
 #include "pros/imu.hpp"
-#include "pros/optical.hpp"
 #include "pros/distance.hpp"
 #include "pros/rotation.hpp"
 
@@ -16,16 +15,11 @@ extern pros::MotorGroup leftMotors;
 extern pros::MotorGroup rightMotors;
 
 // Individual Motors
-extern pros::Motor outtakeMotor;
-extern pros::Motor intakeMotor;
-extern pros::Motor middleMotor;
+extern pros::Motor cascadeRight;
+extern pros::Motor cascadeLeft;
 
 // Sensors
 extern pros::Imu imu;
-extern pros::Optical colorSensor;
-extern pros::Distance distanceSensor;
-// Disabled: port 6 collision with bdist_sens.
-// extern pros::Optical limiter_light;
 
 extern pros::Distance ldist_sens;
 extern pros::Distance rdist_sens;

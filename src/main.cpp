@@ -8,7 +8,6 @@
 #include "pros/rtos.hpp"
 #include "robot/distance_reset.hpp" // IWYU pragma: keep
 #include "robot/motors.hpp"
-#include "robot/color_sort.hpp" // IWYU pragma: keep
 #include "robot/pneumatics.hpp"
 #include "robot/re_run_helpers.hpp"
 #include "robot/start_pose.hpp"
@@ -65,7 +64,7 @@ void opcontrol() {
         int leftY  = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-        chassis.arcade(leftY, rightX, false, .6);
+        chassis.arcade(-rightX,leftY, false, .6);
         control();
         matchloadToggle();
         wingToggle();
@@ -112,6 +111,17 @@ void opcontrol() {
                     controller.rumble("."); // confirm to driver
                 }
             }
+        }
+
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            cascadeRight.move_velocity(200);
+            cascadeLeft.move_velocity(200);
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            cascadeRight.move_velocity(-200);
+            cascadeLeft.move_velocity(-200);
+        } else {
+            cascadeRight.move_velocity(0);
+            cascadeLeft.move_velocity(0);
         }
 
         pose_recording(ofs, open);

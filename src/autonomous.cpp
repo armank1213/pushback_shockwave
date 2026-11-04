@@ -31,9 +31,6 @@ void left_auton() {
     chassis.setPose(0,0,0);
     wing.set_value(0);
     limiter.set_value(1);
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtake(200);
     //Picking up 3 blocks
     chassis.moveToPose(0, 13, 10, 1000, {.forwards = true, .lead = 0, .minSpeed=30}, false);
     chassis.moveToPose(0, 17, 10, 1000, {.forwards = true, .lead = 0, .minSpeed=50}, false);
@@ -48,9 +45,6 @@ void left_auton() {
     chassis.moveToPoint(20,37,2000,{.forwards=false,.maxSpeed=65},false);
     chassis.turnToHeading(-113,200);
     limiter.set_value(1);
-    intake(0);
-    outtake(0);
-    middletake(0);
     // FIRST TRILAT
     //matchloading
     chassis.moveToPoint(-34,11,2500,{.forwards=true,.maxSpeed=80},false);
@@ -59,9 +53,6 @@ void left_auton() {
     matchLoad.set_value(true);
 
     chassis.moveToPoint(-36,0,500,{.forwards=true},false);
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtake(200);
     pros::delay(500);
     //long goal scoring
     chassis.turnToHeading(-160,500);
@@ -85,8 +76,6 @@ void park_auton() {
     chassis.turnToHeading(91,500,{});
     matchLoad.set_value(false);
     chassis.moveToPoint(14,0,2000,{.forwards=true},false);
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
     pros::delay(2000);
 }
 
@@ -145,9 +134,6 @@ void corrected_auton() {
     chassis.moveToPoint(70, 24, 2000, {.forwards = true}, false);   // to bottom long goal
     chassis.turnToHeading(0, 600, {}, false);
     chassis.moveToPose(70, 60, 0, 2500, {.forwards = true}, false); // up toward center goal
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtakeMotor.move(-200);
     pros::delay(1000);
 
     loc::stop();   // always stop the task before the function returns
@@ -176,18 +162,12 @@ void skills_auton() {
     pros::delay(500);
     chassis.moveToPose(26,149,0,700,{.forwards=true,.lead=0},false);
     loc::snapPose();
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtakeMotor.move(-200);
     chassis.moveToPose(26,152,0,500,{.forwards=true,.lead=0},true);
     chassis.moveToPose(26,154,0,200,{.forwards=true,.lead=0},false);
     chassis.moveToPose(26,152,0,200,{.forwards=true,.lead=0},false);
     chassis.moveToPose(26,154,0,200,{.forwards=true,.lead=0},false);
     loc::snapPose();
     pros::delay(2100);
-    intakeMotor.move(0);
-    middleMotor.move(0);
-    outtakeMotor.move(0);
     chassis.moveToPose(27,110,0,1000,{.forwards=false,.lead=0},false);
     loc::snapPose();
     matchLoad.set_value(false);
@@ -200,17 +180,8 @@ void skills_auton() {
     chassis.moveToPose(73,93,90,1200,{.forwards=false,.lead=0},false);
     loc::snapPose();
     limiter.set_value(0);
-    intakeMotor.move(200);
-    middleMotor.move(600);
-    outtakeMotor.move(200);
     pros::delay(300);
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtakeMotor.move(-200);
     pros::delay(2000);
-    intakeMotor.move(0);
-    middleMotor.move(0);
-    outtakeMotor.move(0);
     chassis.moveToPose(88,93,90,800,{.forwards=true,.lead=0},false);
     loc::snapPose();
     chassis.moveToPose(88,93,135,500,{.forwards=true,.lead=0},false);
@@ -221,9 +192,6 @@ void skills_auton() {
     loc::snapPose();
     matchLoad.set_value(true);
     pros::delay(200);
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtakeMotor.move(-200);
     chassis.moveToPose(5,115,-90,500,{.forwards=true,.lead=0},true);
     chassis.moveToPose(2,115,-90,500,{.forwards=true,.lead=0},false);
     chassis.moveToPose(5,115,-90,500,{.forwards=true,.lead=0},false);
@@ -231,9 +199,6 @@ void skills_auton() {
     loc::snapPose();
     limiter.set_value(1);
     pros::delay(2100);
-    intakeMotor.move(0);
-    middleMotor.move(0);
-    outtakeMotor.move(0);
     chassis.moveToPose(15.5,114,-90,2000,{.forwards=true,.lead=0},false);
     matchLoad.set_value(false);
 
@@ -244,22 +209,10 @@ void skills_auton() {
     chassis.moveToPose(73,92,90,1200,{.forwards=false,.lead=0},false);
     loc::snapPose();
     limiter.set_value(0);
-    intakeMotor.move(200);
-    middleMotor.move(600);
-    outtakeMotor.move(200);
     pros::delay(300);
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtakeMotor.move(-200);
     pros::delay(2000);
-    intakeMotor.move(0);
-    middleMotor.move(0);
-    outtakeMotor.move(0);
     loc::snapPose();
     pros::delay(200);
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtakeMotor.move(-200);
     chassis.moveToPose(140,94,90,2000,{.forwards=true,.lead=0},true);
     loc::snapPose();
     chassis.moveToPose(140,94,180,500,{.forwards=true,.lead=0},false);
@@ -295,9 +248,6 @@ void skills_auton() {
     //chassis.moveToPoint(18,0,2000,{.forwards=true, .maxSpeed=110, .minSpeed=95},false);
     // Pick up blocks that don't clear in park (disabled):
     /*
-    intakeMotor.move(-200);
-    middleMotor.move(-600);
-    outtakeMotor.move(-200);
     pros::delay(2000);
     */
     loc::stop();

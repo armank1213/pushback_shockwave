@@ -29,7 +29,7 @@ const double FIELD_WIDTH    = 3657.6; // mm
 const double FIELD_HEIGHT   = 3657.6; // mm  (unused, kept for symmetry)
 const double ANGLE_TOLERANCE = 0.5;   // degrees
 const double DEG_TO_RAD     = M_PI / 180.0;
-const double WHEEL_CIRCUMFERENCE = Omniwheel::NEW_2 * M_PI; // mm
+const double WHEEL_CIRCUMFERENCE = Omniwheel::NEW_275 * M_PI; // mm
 
 struct SensorOffsets {
     double left  = 0.0;

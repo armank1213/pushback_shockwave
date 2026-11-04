@@ -240,21 +240,13 @@ void run() {
 
         // ── Mechanism replay ──────────────────────────────────────
         if (r1) {
-            outtake(200); intake(200); middletake(600);
             limiter.set_value(1);
         } else if (r2) {
-            intake(200); middletake(600); outtake(200);
             limiter.set_value(0);
         } else if (y_btn) {
             limiter.set_value(0);
-            outtake(-200); intake(200); middletake(600);
         } else if (b_btn) {
             limiter.set_value(0);
-            outtake(-55); intake(200); middletake(600);
-        } else if (l2) {
-            outtake(-200); intake(-200); middletake(-600);
-        } else {
-            intake(0); outtake(0); middletake(0);
         }
         if (l1 && !prev_l1) {
             wingState = !wingState;
