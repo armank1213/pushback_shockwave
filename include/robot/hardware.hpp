@@ -14,9 +14,12 @@ extern pros::Controller controller;
 extern pros::MotorGroup leftMotors;
 extern pros::MotorGroup rightMotors;
 
-// Individual Motors
+// Cascade Motors
 extern pros::Motor cascadeRight;
 extern pros::Motor cascadeLeft;
+
+// Intake Motor
+extern pros::Motor intakeMotor;
 
 // Sensors
 extern pros::Imu imu;

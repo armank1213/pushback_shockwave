@@ -23,8 +23,8 @@ void angular_tuning() {
 }
 
 void lateral_tuning() {
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(0, 20, 1000, {}, false);
+    chassis.setPose(0, -7, 0);
+    chassis.moveToPoint(0, 23.8125, 1500, {}, false);
 }
 
 void left_auton() {

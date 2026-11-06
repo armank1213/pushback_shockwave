@@ -3,23 +3,23 @@
 
 // Tracking wheels (2.75" omnis). Offsets are from the tracking center.
 // Horizontal wheel: 5.75" behind center (negative).
-lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_275, -5.75);
+lemlib::TrackingWheel horizontal_wheel(&horizontal_rotation, lemlib::Omniwheel::NEW_275, -3.0625);
 // Vertical wheel: 2.5" left of center (negative).
-lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_275, -2.5);
+lemlib::TrackingWheel vertical_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_275, -0.0725);
 
 // Drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
-                              10, // track width, inches
+                              12.625, // track width, inches
                               lemlib::Omniwheel::NEW_275, // 2.75" drive omnis
                               360, // drivetrain rpm
-                              8 // horizontal drift
+                              2 // horizontal drift
 );
 
 // Lateral PID controller
-lemlib::ControllerSettings lateralController(10, // proportional gain (kP)
+lemlib::ControllerSettings lateralController(15, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              3, // derivative gain (kD)
+                                              50, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -29,7 +29,7 @@ lemlib::ControllerSettings lateralController(10, // proportional gain (kP)
 );
 
 // Angular PID controller
-lemlib::ControllerSettings angularController(2, // proportional gain (kP)
+lemlib::ControllerSettings angularController(2.1, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               10, // derivative gain (kD)
                                               3, // anti windup

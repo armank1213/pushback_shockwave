@@ -45,8 +45,10 @@ void autonomous() {
     //mcl_rerun();         // MCL replay of a recorded/drawn route
     //corrected_auton();   // hand-coded auton + background MCL correction
     //localization_test(); // live readout to test EKF/MCL (correction off)
-    skills_auton();
+    //skills_auton();
     //angular_tuning();
+    //lateral_tuning();
+    left_auton_override();
 }
 
 void opcontrol() {
@@ -64,7 +66,7 @@ void opcontrol() {
         int leftY  = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-        chassis.arcade(-rightX,leftY, false, .6);
+        chassis.arcade(leftY,rightX, false, .6);
         control();
         matchloadToggle();
         wingToggle();
@@ -116,12 +118,16 @@ void opcontrol() {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
             cascadeRight.move_velocity(200);
             cascadeLeft.move_velocity(200);
+            intakeMotor.move_velocity(200);
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
             cascadeRight.move_velocity(-200);
             cascadeLeft.move_velocity(-200);
+            intakeMotor.move_velocity(-200);
+
         } else {
             cascadeRight.move_velocity(0);
-            cascadeLeft.move_velocity(0);
+            intakeMotor.move_velocity(0);
+
         }
 
         pose_recording(ofs, open);
