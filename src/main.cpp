@@ -12,6 +12,7 @@
 #include "robot/re_run_helpers.hpp"
 #include "robot/start_pose.hpp"
 #include "robot/localization.hpp"
+#include "robot/jerryPaths.hpp" // IWYU pragma: keep
 
 #include <cstdio>
 #include <iostream>
@@ -37,6 +38,8 @@ void disabled() {}
 
 void competition_initialize() {}
 
+
+
 void autonomous() {
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
@@ -49,6 +52,7 @@ void autonomous() {
     //angular_tuning();
     //lateral_tuning();
     left_auton_override();
+    //pure_pursuit();
 }
 
 void opcontrol() {

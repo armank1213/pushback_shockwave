@@ -10,6 +10,7 @@
 #include "robot/localization.hpp" // IWYU pragma: keep
 #include "robot/start_pose.hpp" // IWYU pragma: keep
 #include "lemlib/asset.hpp" // IWYU pragma: keep
+#include "robot/jerryPaths.hpp" // IWYU pragma: keep
 
 // EKF/MCL replay lives in src/oekf_rerun.cpp / src/mcl_rerun.cpp.
 //
@@ -25,6 +26,14 @@ void angular_tuning() {
 void lateral_tuning() {
     chassis.setPose(0, -7, 0);
     chassis.moveToPoint(0, 23.8125, 1500, {}, false);
+}
+
+void pure_pursuit() {
+    chassis.setPose(-66.369,-35.525,72.291);
+    //chassis.follow(path1_txt, 12, 1000);
+    //chassis.follow(path2_txt, 12, 1000);
+    //chassis.follow(path3_txt, 12, 1000);
+    chassis.follow(armanRoute_txt, 12, 1000);
 }
 
 void left_auton() {
@@ -63,55 +72,11 @@ void left_auton() {
 
 }
 
+ASSET(jerry1_txt);
+
 void left_auton_override() {
-    chassis.setPose(-65.219, -2.591, 90);
-
-    // Start → P1: front faces goal 2 (north side)
-    chassis.moveToPose(-46.904, -19.68, 180, 2000, {.lead = 0.3, .maxSpeed = 50});
-    chassis.waitUntilDone();
-    // ...outtake into goal 2...
-
-    // Back off, aim the back at P2, reverse in
-    chassis.moveToPoint(-46.904, -9.5, 800, {.forwards = false});
-    chassis.turnToHeading(290, 900);
-    chassis.moveToPose(-26.312, -23.356, 270, 2000,
-                       {.forwards = false, .lead = 0.4, .maxSpeed = 50});
-    chassis.waitUntilDone();
-    // ...intake at P2...
-
-    // P2 → goal 2 east side
-    chassis.moveToPoint(-41.17, -24.28, 1500, {.maxSpeed = 50});
-    chassis.waitUntilDone();
-    // ...outtake the P2 block into goal 2...
-
-    // Goal 2 → loader, BACK FIRST
-    chassis.moveToPoint(-32, -24.28, 900, {.forwards = false});
-    chassis.turnToHeading(0, 900);                       // back points south, down the lane
-    chassis.moveToPoint(-37, -59.046, 2000, {.forwards = false, .maxSpeed = 60});
-    chassis.turnToHeading(90, 900);                      // back faces the loader
-    chassis.moveToPoint(-63.267, -59.046, 2000, {.forwards = false, .maxSpeed = 60});
-
-    for (int i = 0; i < 2; i++) {
-        chassis.waitUntilDone();
-        // matchload
-
-        // Loader → goal 2 south side (P5): drive FORWARD off the loader
-        chassis.moveToPoint(-59.5, -59.046, 700);
-        chassis.turnToHeading(0, 700);
-        chassis.moveToPoint(-59.5, -38, 1200, {.minSpeed = 40, .earlyExitRange = 3});
-        chassis.moveToPose(-47.159, -29.228, 0, 2000, {.lead = 0.3, .maxSpeed = 60});
-        chassis.waitUntilDone();
-        // ...outtake into goal 2...
-
-        if (i == 2 - 1) break;
-
-        // P5 → loader, back first
-        chassis.moveToPose(-59.5, -44, 0, 1500,
-                           {.forwards = false, .lead = 0.5, .minSpeed = 40, .earlyExitRange = 3});
-        chassis.moveToPoint(-59.5, -59.046, 1200, {.forwards = false});
-        chassis.turnToHeading(90, 700);
-        chassis.moveToPoint(-63.267, -59.046, 800, {.forwards = false});
-    }
+    chassis.setPose(0,0,0);
+    chassis.follow(jerry1_txt, 15, 1000, {}, false); // 15 inch lookahead 
 }
 
 
@@ -175,132 +140,10 @@ void localization_test() {
 // Field-absolute coords (0,0 = red-side bottom-left, 144"). Landmarks:
 // center goal ~70,70; long goals at y≈23 and y≈117.
 void corrected_auton() {
-    // Seed pose + spawn the MCL correction task.
-    loc::start(56.5, 23, 0);
 
-    wing.set_value(0);
-    limiter.set_value(1);
-    matchLoad.set_value(false);
-
-    // Plain LemLib moves — MCL trims drift underneath.
-    chassis.moveToPoint(70, 24, 2000, {.forwards = true}, false);   // to bottom long goal
-    chassis.turnToHeading(0, 600, {}, false);
-    chassis.moveToPose(70, 60, 0, 2500, {.forwards = true}, false); // up toward center goal
-    pros::delay(1000);
-
-    loc::stop();   // always stop the task before the function returns
 }
 
 
 void skills_auton() {
-    // Field-absolute skills route with discrete snapPose corrections.
-    loc::start(70, 24, 0, loc::Method::MCL, false);
-    wing.set_value(0);
-    limiter.set_value(1);
-    matchLoad.set_value(false);
-    // Blocking moves: each finishes before the next, so the robot is stopped
-    // when snapPose() runs.
-    chassis.moveToPose(70, 27, 0, 500, {.forwards=true,.lead=0}, false);
-    loc::snapPose();
-    chassis.moveToPose(12, 27, -90, 1700, {.forwards=true,.lead=0}, false);
-    loc::snapPose();
-    chassis.moveToPose(12,115,0, 2500, {.lead=0}, false);
-    loc::snapPose();   // robot fully stopped -> clean reading, x/y only
-    chassis.moveToPose(26,119,45,1000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(27,119,0,1000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    matchLoad.set_value(true);
-    pros::delay(500);
-    chassis.moveToPose(26,149,0,700,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(26,152,0,500,{.forwards=true,.lead=0},true);
-    chassis.moveToPose(26,154,0,200,{.forwards=true,.lead=0},false);
-    chassis.moveToPose(26,152,0,200,{.forwards=true,.lead=0},false);
-    chassis.moveToPose(26,154,0,200,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    pros::delay(2100);
-    chassis.moveToPose(27,110,0,1000,{.forwards=false,.lead=0},false);
-    loc::snapPose();
-    matchLoad.set_value(false);
-    chassis.moveToPose(27,119,90,700,{.forwards=false,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(88,106.5,90,2000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(88,106.5,55,800,{.forwards=true,.lead=0},false);//
-    loc::snapPose();
-    chassis.moveToPose(73,93,90,1200,{.forwards=false,.lead=0},false);
-    loc::snapPose();
-    limiter.set_value(0);
-    pros::delay(300);
-    pros::delay(2000);
-    chassis.moveToPose(88,93,90,800,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(88,93,135,500,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(42.5,118,-86,1200,{.forwards=false,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(15.5,114,-90,2000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    matchLoad.set_value(true);
-    pros::delay(200);
-    chassis.moveToPose(5,115,-90,500,{.forwards=true,.lead=0},true);
-    chassis.moveToPose(2,115,-90,500,{.forwards=true,.lead=0},false);
-    chassis.moveToPose(5,115,-90,500,{.forwards=true,.lead=0},false);
-    chassis.moveToPose(2,115,-90,500,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    limiter.set_value(1);
-    pros::delay(2100);
-    chassis.moveToPose(15.5,114,-90,2000,{.forwards=true,.lead=0},false);
-    matchLoad.set_value(false);
-
-    chassis.moveToPose(88,106.5,-90,2000,{.forwards=false,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(88,106.5,55,800,{.forwards=true,.lead=0},false);//
-    loc::snapPose();
-    chassis.moveToPose(73,92,90,1200,{.forwards=false,.lead=0},false);
-    loc::snapPose();
-    limiter.set_value(0);
-    pros::delay(300);
-    pros::delay(2000);
-    loc::snapPose();
-    pros::delay(200);
-    chassis.moveToPose(140,94,90,2000,{.forwards=true,.lead=0},true);
-    loc::snapPose();
-    chassis.moveToPose(140,94,180,500,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(140,14,180,2000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(140,14,270,3000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(70,10,270,1500,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(75,0,270,2000,{.forwards=true,.lead=0, .minSpeed=70},false);
-    //chassis.moveToPose(120,30,180,100);
-    /*
-    chassis.moveToPose(118,20,180,2000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    matchLoad.set_value(true);
-    chassis.moveToPose(118,15,180,2000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    pros::delay(1000);
-    chassis.moveToPose(118,30,180,2000,{.forwards=false,.lead=0},false);
-    chassis.moveToPose(118,30,90,2000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(130,30,90,2000,{.forwards=true,.lead=0},false);
-    loc::snapPose();
-    chassis.moveToPose(130,30,0,2000,{.forwards=false,.lead=0},false);
-    loc::snapPose();
-*/
-
-
-
-
-    // Drive into park (disabled):
-    //chassis.moveToPoint(18,0,2000,{.forwards=true, .maxSpeed=110, .minSpeed=95},false);
-    // Pick up blocks that don't clear in park (disabled):
-    /*
-    pros::delay(2000);
-    */
-    loc::stop();
+    
 }

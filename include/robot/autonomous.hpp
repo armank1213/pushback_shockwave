@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 // PID tuning
 void angular_tuning();
 void lateral_tuning();
@@ -14,4 +16,4 @@ void right_auton();
 void skills_auton();
 void park_auton();
 void left_auton_override();
-
+void pure_pursuit();
