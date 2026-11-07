@@ -52,13 +52,14 @@ void autonomous() {
   // skills_auton();
   // angular_tuning();
   // lateral_tuning();
-  left_auton_override();
+  //left_auton_override();
   // pure_pursuit();
 }
 
 void opcontrol() {
   leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+  verticalLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   clawLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   intakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   cascadeLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);

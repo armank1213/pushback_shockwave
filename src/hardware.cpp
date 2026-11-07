@@ -18,6 +18,8 @@ pros::Motor intakeMotor(16, pros::v5::MotorGears::green);
 pros::Motor clawLiftMotor(10, pros::v5::MotorGears::green);
 pros::Motor clawSpinMotor(8, pros::v5::MotorGears::green);
 
+pros::Motor verticalLiftMotor(9, pros::v5::MotorGears::green);
+
 // Sensors
 pros::Imu imu(11);
 pros::Rotation vertical_rotation(20);
@@ -33,6 +35,6 @@ pros::Distance bdist_sens(10);
 
 pros::adi::Pneumatics claw('A', true);
 
-//pros::adi::Pneumatics matchLoad('E', false);
-//pros::adi::Pneumatics limiter('A', false);
-//pros::adi::Pneumatics wing('C', false);
+pros::adi::Pneumatics matchLoad('E', false);
+pros::adi::Pneumatics limiter('B', false);
+pros::adi::Pneumatics wing('C', false);

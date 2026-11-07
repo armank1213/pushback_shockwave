@@ -42,3 +42,5 @@ extern pros::adi::Pneumatics claw;
 // Tracking Wheels
 extern pros::Rotation horizontal_rotation;
 extern pros::Rotation vertical_rotation;
+
+extern pros::Motor verticalLiftMotor;

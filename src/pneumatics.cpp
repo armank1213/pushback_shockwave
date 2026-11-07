@@ -55,13 +55,15 @@ void wingToggle() {
 }
 
 void clawToggle() {
-  bool isOpen = true;
-  bool lastBButtonState = false;
+  static bool isOpen = true;
+  static bool lastAButtonState = false;
 
-  bool currentB = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
-  if (currentB && !lastBButtonState) {
+  bool currentA = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
+  if (currentA && !lastAButtonState) {
     isOpen = !isOpen;
     claw.set_value(isOpen);
+    verticalLiftMotor.move_absolute(isOpen ? 0 : 90, 100);
   }
-  lastBButtonState = currentB;
+  lastAButtonState = currentA;
+
 }
