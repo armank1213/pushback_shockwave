@@ -5,3 +5,4 @@
 void limiterToggle();
 void matchloadToggle();
 void wingToggle();
+void clawToggle();

@@ -3,17 +3,20 @@
 // Controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-
 // Drive: 4 blue motors, {front, back} per side.
 pros::MotorGroup leftMotors({-14, -13}, pros::MotorGearset::blue);
 pros::MotorGroup rightMotors({1, 12}, pros::MotorGearset::blue);
 
 // Cascade Motors
-pros::Motor cascadeRight(15, pros::v5::MotorGears::green);
-pros::Motor cascadeLeft(-4, pros::v5::MotorGears::green);
+pros::Motor cascadeRight(15, pros::v5::MotorGears::red);
+pros::Motor cascadeLeft(-4, pros::v5::MotorGears::red);
 
 // Intake Motor
 pros::Motor intakeMotor(16, pros::v5::MotorGears::green);
+
+// Claw Motors
+pros::Motor clawLiftMotor(10, pros::v5::MotorGears::green);
+pros::Motor clawSpinMotor(8, pros::v5::MotorGears::green);
 
 // Sensors
 pros::Imu imu(11);
@@ -27,6 +30,9 @@ pros::Distance fdist_sens(4);
 pros::Distance bdist_sens(10);
 
 // Pneumatics
-pros::adi::Pneumatics matchLoad('E', false);
-pros::adi::Pneumatics limiter('A', false);
-pros::adi::Pneumatics wing('C', false);
+
+pros::adi::Pneumatics claw('A', true);
+
+//pros::adi::Pneumatics matchLoad('E', false);
+//pros::adi::Pneumatics limiter('A', false);
+//pros::adi::Pneumatics wing('C', false);
