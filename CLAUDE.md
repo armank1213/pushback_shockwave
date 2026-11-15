@@ -1,7 +1,15 @@
 # CLAUDE.md — pushback_shockwave
 
-MHHS Robotics VEX V5 competition robot (VEX Pushback season). PROS + LemLib.
-This file is the handoff summary for a fresh Claude session. Read it first.
+MHHS Robotics VEX V5 competition robot. Started as the Pushback-season bot; now rebuilt for the **2026-27 Override season** (new drivetrain, cascade, claw). PROS + LemLib.
+This file is the handoff summary for a fresh Claude session (or a teammate). Read it first.
+
+## 0. Current status (2026-11-15) — start here
+
+- **Goal right now:** get the old MCL record-and-replay auton working on the new robot.
+- **Done:** all ports and all 4 distance sensor offsets are set (`681d659`); start pose (110, 8, 0) and `autonomous()` → `mcl_rerun()` (`b16cf59`).
+- **Not done:** nothing has been built on Ubuntu or tested on the robot yet.
+- **Next steps:** build on Ubuntu → upload → record a route (RIGHT arrow, see §5) → replay it in auton → check accuracy.
+- **Safety auton:** `ourToggle_auton()`. Switch `autonomous()` back to it before a real match unless the replay works.
 
 ---
 
@@ -26,16 +34,35 @@ Usually USB permissions, not code. Add user to dialout (`sudo usermod -aG dialou
 
 ## 2. Hardware / ports (`src/hardware.cpp`)
 
-- **Left drive:** ports −19, −13, −17 (blue gearset). **Right drive:** 12, 18, 14 (blue).
-- **Intake** 15 (green), **Middle** 7 (blue), **Outtake** 10 (green).
-- **IMU** port 3. **Vertical rotation** −11. **Horizontal rotation** 20.
-- **Optical (color sort)** 8. **Distance (color sort)** 2.
-- **Perimeter distance sensors:** `ldist_sens` 9, `rdist_sens` 4, `fdist_sens` 5, `bdist_sens` 6.
-- **Pneumatics (ADI):** matchLoad `E`, limiter `A`, wing `C`.
-- Known conflict: port 6 wanted by a `limiter_light` optical but used by `bdist_sens`; `limiter_light` is commented out.
+| Port | Device |
+|---|---|
+| −14, −13 / 1, 12 | Left / right drive (blue, 2 motors per side) |
+| −15, 4 | Cascade right / left (red) |
+| 16 | Intake (green) |
+| 8 | Claw spin (green) |
+| 9 | Claw lift (green) |
+| 17 | Vertical lift (green) |
+| 11 | IMU |
+| 20 / 19 | Vertical / horizontal tracking wheel (rotation sensors) |
+| 7 / 3 / 5 / 10 | Distance sensors: left / right / front / back |
 
-### Driver control (`src/motors.cpp`, `src/pneumatics.cpp`)
-Arcade. R1 = score (intake+middle+outtake, limiter up). R2 = intake, limiter down. Y / B = reverse-outtake variants. L2 = reverse all. L1 = wing toggle. RIGHT = matchload toggle. UP = bench localization-test toggle. X = snap field pose from sensors + record route to `/usd/dtData.txt`.
+- **Pneumatics (ADI):** claw `A`, limiter `B`, wing `C`, matchLoad `E`.
+- No two devices share a port (checked 2026-11-14). Free smart ports: 2, 6, 18, 21.
+- Tracking wheels (`src/chassis_config.cpp`): horizontal offset −3.0625, vertical −0.0725, both 2.75" omnis. Drivetrain 360 rpm, 2.75" omnis.
+
+### Driver control (`src/main.cpp` `opcontrol()`, `src/motors.cpp`, `src/pneumatics.cpp`)
+Arcade (left Y = drive, right X = turn).
+
+| Button | Action |
+|---|---|
+| L2 / L1 | Cascade up (+200) / down (−200) |
+| R1 / R2 | Intake +200 / −200. R1 also raises the limiter; R2, Y and B lower it |
+| DOWN / UP | Claw lift +200 / −200 |
+| B / A | Claw spin +200 / −200 |
+| A (press) | Also toggles the claw piston and moves the vertical lift to 0° / 90° |
+| **RIGHT** | **Start route recording** (see §5) |
+
+Wing and matchload toggles are commented out. The old UP localization bench test is commented out.
 
 ---
 
@@ -88,22 +115,30 @@ Per sensor, the **along-beam** component you already roughly know; the **perpend
 - FRONT/BACK: along = `by`, perpendicular = `bx` (left/right of the fore-aft centerline).
 - LEFT/RIGHT: along = `bx`, perpendicular = `by` (fore/aft of the left-right axis through center).
 
-**Find the tracking center:** horizontal tracking wheel sits 5.5" behind it, vertical wheel 1.5" to the side (from `chassis_config.cpp` offsets); their crossing lines = center. Sanity check: spin robot in place — the non-orbiting point should be that mark.
+**Current mounts (measured 2026-11-14, new robot):** FRONT `{0, 0.5}`, BACK `{0.4375, −6}`, LEFT `{−5.3125, −4.0625}`, RIGHT `{5.3125, −4.0625}`. Sign convention = LemLib tracking-wheel offsets (right/front +, left/back −).
+
+**Find the tracking center:** use the tracking wheel offsets in `chassis_config.cpp` (horizontal wheel −3.0625" = behind center, vertical wheel −0.0725" = basically on the centerline); their crossing lines = center. Sanity check: spin robot in place — the non-orbiting point should be that mark.
 
 **Verify:** seed square in a corner (est should read true coord within ~½"), then rotate in place ~30–45°. If `est` drifts during rotation, a perpendicular offset (or its sign) is wrong — nudge ±0.5" / try sign swap and re-test. Get this right and you should not need to re-tune `FIELD_IN`.
 
 ---
 
-## 5. Autons (`src/autonomous.cpp`)
+## 5. Autons & route record/replay
 
-`autonomous()` (in `src/main.cpp`) currently calls **`localization_test()`** (MCL, correction OFF). Other options commented out: `oekf_rerun()`, `mcl_rerun()`, `corrected_auton()`, `skills_auton()`.
+`autonomous()` (in `src/main.cpp`) currently calls **`mcl_rerun()`**. Everything else is commented out.
 
-- `localization_test()` — seeds pose from `determine_start_pose(TDEG)` (odom + filter start at the same sensor-measured coord), then prints od/est/var on the controller so you can compare. Place robot near a corner, square-ish, at heading `TDEG`.
-- `left_auton`, `park_auton`, `skills_auton` — hand-coded routines (relative coords from setPose(0,0,0)).
-- `corrected_auton` — example of MCL correction ON with field-absolute waypoints.
-- `right_auton` — stub.
+- `mcl_rerun()` — MCL replay of a recorded route. **Driving only**: wing/matchload/limiter replay was removed. Reads `/usd/dtData.txt` from the SD card (`USE_EMBEDDED_ROUTE 0` in `mcl_rerun.cpp`). No SD card → controller shows `FAIL: no SD card` and the robot doesn't move.
+- `ourToggle_auton()` — **safety auton**, plain LemLib moves. Don't change it.
+- `oekf_rerun()` — EKF replay (still has piston replay). `localization_test()` — live od/est/var readout. `corrected_auton()` / `skills_auton()` — currently empty.
+- `left_auton_override()` — pure-pursuit test of `static/jerry1.txt`. JerryIO paths use **center-origin** coords, which don't match this code's corner origin (add ~70.2" to x and y). `pure_pursuit()` and `ASSET(armanRoute_txt)` are commented out (file missing).
 
-Route recording/replay: press X in opcontrol to snap pose + log to `/usd/dtData.txt`; replay via `mcl_rerun()` / `oekf_rerun()`. Embedded-route option exists (`USE_EMBEDDED_ROUTE` in mcl_rerun.cpp, generated by `tools/embed_route.sh`).
+### Recording a route
+1. Put the robot on the start spot: tracking center at **(110, 8)**, heading **0** (facing away from the red driver station). Tape it so it's repeatable. Set in `REC_START_X/Y/DEG` at the top of `main.cpp`.
+2. In driver control press **RIGHT**. Controller shows `Start 110 8` and rumbles once = recording. No rumble = no SD card.
+3. Drive the route. It saves continuously; there's no stop button — just disable. A second RIGHT press while recording is ignored (can't wipe it). The next driver-control session's RIGHT press overwrites the file.
+4. Put the robot back on the tape and run auton from a competition switch or the brain's timed run (plain "run" goes straight to driver control).
+
+At (110, 8) the sensors should read: back ≈ 2", right ≈ 25" (in range); left ≈ 105" and front ≈ 132" are out of range (>2000 mm) and get ignored until the robot gets closer to those walls.
 
 ---
 
