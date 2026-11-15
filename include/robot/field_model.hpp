@@ -37,10 +37,10 @@ struct SensorMount {
 
 // Measured per sensor: bx/by are tape-measure readings from the tracking
 // center to each sensor lens; dir is the cardinal the sensor faces.
-inline constexpr SensorMount FRONT = { 0.00,  7.5, 0.0      };
-inline constexpr SensorMount BACK  = { 0.00, -7.75, PI       };
-inline constexpr SensorMount LEFT  = {-5.00,  -6.00, -PI / 2.0 };
-inline constexpr SensorMount RIGHT = { 5.00,  -6.00,  PI / 2.0 };
+inline constexpr SensorMount FRONT = { 0.00,  0.50, 0.0      };
+inline constexpr SensorMount BACK  = { 0.4375, -6.00, PI     };
+inline constexpr SensorMount LEFT  = {-5.3125, -4.0625, -PI / 2.0 };
+inline constexpr SensorMount RIGHT = { 5.3125, -4.0625,  PI / 2.0 };
 
 // World pose of a sensor face and the world angle it points, given the
 // robot pose (X, Y, th[rad]).
