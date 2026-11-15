@@ -24,8 +24,8 @@ bool open = false;
 // Route-recording start pose: field-absolute inches, (0,0) = red-side
 // bottom-left corner, heading 0 = facing +Y. Place the robot's tracking
 // center on this exact spot before pressing RIGHT.
-constexpr double REC_START_X = 50.0;
-constexpr double REC_START_Y = 0.0;
+constexpr double REC_START_X = 110.0;
+constexpr double REC_START_Y = 8.0;
 constexpr double REC_START_DEG = 0.0;
 
 void initialize() {
@@ -53,7 +53,7 @@ void autonomous() {
   rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
   // oekf_rerun();        // EKF replay of a recorded/drawn route
-  //mcl_rerun();           // MCL replay of a recorded/drawn route
+  mcl_rerun();            // MCL replay of a recorded/drawn route
   // corrected_auton();   // hand-coded auton + background MCL correction
   // localization_test(); // live readout to test EKF/MCL (correction off)
   // skills_auton();
@@ -61,7 +61,7 @@ void autonomous() {
   // lateral_tuning();
   //left_auton_override();
   // pure_pursuit();
-  ourToggle_auton();
+  // ourToggle_auton();   // safety auton
   // oppositieTeamToggle_auton();
 }
 
