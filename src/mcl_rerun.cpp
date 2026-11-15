@@ -132,35 +132,6 @@ bool parse_frame(const std::string& line, Frame& out) {
     return true;
 }
 
-void replay_mech(const Frame& f,
-                 bool& prev_l1, bool& prev_right, bool& prev_x,
-                 bool& wingState, bool& matchloadState, bool& limiterState) {
-    if (f.r1) {
-        limiter.set_value(1);
-    } else if (f.r2) {
-        limiter.set_value(0);
-    } else if (f.y_btn) {
-        limiter.set_value(0);
-    } else if (f.b_btn) {
-        limiter.set_value(0);
-    }
-    if (f.l1 && !prev_l1) {
-        wingState = !wingState;
-        wing.set_value(wingState);
-    }
-    prev_l1 = f.l1;
-    if (f.right_btn && !prev_right) {
-        matchloadState = !matchloadState;
-        matchLoad.set_value(matchloadState);
-    }
-    prev_right = f.right_btn;
-    if (f.x_btn && !prev_x) {
-        limiterState = !limiterState;
-        limiter.set_value(limiterState);
-        // limiter_light disabled — port 6 collision
-    }
-    prev_x = f.x_btn;
-}
 
 } // anonymous namespace
 
@@ -431,13 +402,6 @@ void rerun(double start_x_in, double start_y_in, double start_theta_deg) {
     int lastWaypointStep = 0;
     double lastHeading   = start_theta_deg;
 
-    bool prev_l1        = false;
-    bool prev_right     = false;
-    bool prev_x         = true;  // suppress record-start X phantom
-    bool wingState      = false;
-    bool matchloadState = false;
-    bool limiterState   = true;
-
     while (std::getline(fs, line)) {
         if (line.empty()) continue;
 
@@ -448,10 +412,6 @@ void rerun(double start_x_in, double start_y_in, double start_theta_deg) {
             controller.print(0, 0, "OK %.1f %.1f %.1f", fr.x, fr.y, fr.t);
             pros::delay(80);
         }
-
-        // Mech replay.
-        replay_mech(fr, prev_l1, prev_right, prev_x,
-                    wingState, matchloadState, limiterState);
 
         // ── MCL predict ─────────────────────────────────────────
         lemlib::Pose currPose = chassis.getPose();

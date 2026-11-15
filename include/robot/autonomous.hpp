@@ -17,3 +17,5 @@ void skills_auton();
 void park_auton();
 void left_auton_override();
 void pure_pursuit();
+void ourToggle_auton();
+void oppositeTeamToggle_auton();

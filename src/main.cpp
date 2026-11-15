@@ -21,6 +21,13 @@
 std::ofstream ofs;
 bool open = false;
 
+// Route-recording start pose: field-absolute inches, (0,0) = red-side
+// bottom-left corner, heading 0 = facing +Y. Place the robot's tracking
+// center on this exact spot before pressing RIGHT.
+constexpr double REC_START_X = 50.0;
+constexpr double REC_START_Y = 0.0;
+constexpr double REC_START_DEG = 0.0;
+
 void initialize() {
   chassis.calibrate();
 
@@ -46,14 +53,16 @@ void autonomous() {
   rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
   // oekf_rerun();        // EKF replay of a recorded/drawn route
-  // mcl_rerun();         // MCL replay of a recorded/drawn route
+  //mcl_rerun();           // MCL replay of a recorded/drawn route
   // corrected_auton();   // hand-coded auton + background MCL correction
   // localization_test(); // live readout to test EKF/MCL (correction off)
   // skills_auton();
-  // angular_tuning();
+  // angular_tuning();/
   // lateral_tuning();
   //left_auton_override();
   // pure_pursuit();
+  ourToggle_auton();
+  // oppositieTeamToggle_auton();
 }
 
 void opcontrol() {
@@ -65,7 +74,7 @@ void opcontrol() {
   cascadeLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   cascadeRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-  open = false; // recording file opens on X press, not here
+  open = false; // recording file opens on RIGHT press, not here
 
   // Bench localization test: UP toggles MCL (correction OFF) and shows odom
   // vs estimate on the controller while you drive.
@@ -76,7 +85,7 @@ void opcontrol() {
     int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-    chassis.arcade(leftY, rightX, false, .6);
+    chassis.arcade(leftY, rightX, false, .7);
     control();
     //matchloadToggle();
     //wingToggle();
@@ -112,15 +121,13 @@ void opcontrol() {
     }
     dbgTick++;
 
-    // X starts recording: snap chassis to a field-absolute pose from the
-    // distance sensors (place the robot at its true start + heading first),
-    // then open the log. X is also a logged column — replay suppresses the
-    // first-frame phantom toggle via prev_x = true.
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+    // RIGHT starts recording: set the pose to the fixed start spot
+    // (REC_START_*), then open the log. Ignored once recording, so a second
+    // RIGHT press doesn't restart and wipe the log.
+    if (!open && controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
       if (pros::usd::is_installed()) {
-        lemlib::Pose start = determine_start_pose(0.0);
-        chassis.setPose(start.x, start.y, start.theta);
-        controller.print(0, 0, "Start %.0f %.0f", start.x, start.y);
+        chassis.setPose(REC_START_X, REC_START_Y, REC_START_DEG);
+        controller.print(0, 0, "Start %.0f %.0f", REC_START_X, REC_START_Y);
 
         if (ofs.is_open())
           ofs.close(); // close any previous session

@@ -28,12 +28,31 @@ void lateral_tuning() {
     chassis.moveToPoint(0, 23.8125, 1500, {}, false);
 }
 
-void pure_pursuit() {
-    chassis.setPose(-66.369,-35.525,72.291);
-    //chassis.follow(path1_txt, 12, 1000);
-    //chassis.follow(path2_txt, 12, 1000);
-    //chassis.follow(path3_txt, 12, 1000);
-    chassis.follow(armanRoute_txt, 12, 1000);
+// Disabled: static/armanRoute.txt doesn't exist yet.
+// void pure_pursuit() {
+//     chassis.setPose(-66.369,-35.525,72.291);
+//     //chassis.follow(path1_txt, 12, 1000);
+//     //chassis.follow(path2_txt, 12, 1000);
+//     //chassis.follow(path3_txt, 12, 1000);
+//     chassis.follow(armanRoute_txt, 12, 1000);
+// }
+void ourToggle_auton() {
+
+chassis.setPose(0,0,0);
+chassis.moveToPoint(0,-10,1000,{.forwards=false});
+chassis.moveToPoint(0,11,1000,{.forwards=true});
+chassis.moveToPoint(0,-10,1000,{.forwards=false});
+chassis.moveToPoint(0,11,1000,{.forwards=true});
+chassis.moveToPoint(0,-25,1000,{.forwards=false});
+
+}
+
+void oppositeTeamToggle_auton() {
+
+chassis.setPose(0,0,0);
+chassis.moveToPoint(0,-10,1000,{.forwards=false});
+chassis.moveToPoint(0,11,1000,{.forwards=true});
+chassis.moveToPoint(0,-25,1000,{.forwards=false});
 }
 
 void left_auton() {

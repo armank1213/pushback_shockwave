@@ -4,4 +4,4 @@
 ASSET(path1_txt);
 ASSET(path2_txt);
 ASSET(path3_txt);
-ASSET(armanRoute_txt);
+// ASSET(armanRoute_txt); // disabled: static/armanRoute.txt doesn't exist yet
